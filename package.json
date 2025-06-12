@@ -2,12 +2,26 @@
   "name": "flick",
   "version": "0.0.1",
   "type": "module",
+  "description": "A tiny and focused UI framework designed for clarity and speed",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ratioSolver/Flick.git"
   },
+  "keywords": [
+    "ui",
+    "framework",
+    "component",
+    "reactive",
+    "lightweight"
+  ],
+  "author": "ratioSolver",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ratioSolver/Flick/issues"
+  },
+  "homepage": "https://github.com/ratioSolver/Flick#readme",
   "files": [
     "/dist"
   ],
@@ -19,5 +33,8 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

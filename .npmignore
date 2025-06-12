@@ -1,0 +1,29 @@
+# Source
+src/
+
+# Configuration files
+.github/
+tsconfig.json
+.npmignore
+
+# Development and testing
+node_modules/
+coverage/
+*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Docs
+docs/
+examples/
+
+# Build files that should not be published
+*.tsbuildinfo
