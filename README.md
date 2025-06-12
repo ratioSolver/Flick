@@ -26,7 +26,7 @@ Flick provides the basic utilities for managing components, lists, server connec
 To install Flick, you can use npm:
 
 ```bash
-npm install flick
+npm install @ratiosolver/flick
 ```
 
 ## Usage
@@ -34,7 +34,7 @@ npm install flick
 Flick provides a set of utilities that can be used to build web applications. Here is an example of how to use the framework to create a simple component:
 
 ```javascript
-import { AppComponent } from 'flick';
+import { AppComponent } from '@ratiosolver/flick';
 
 class MyApp extends AppComponent {
 

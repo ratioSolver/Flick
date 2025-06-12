@@ -1,5 +1,5 @@
 {
-  "name": "flick",
+  "name": "@ratiosolver/flick",
   "version": "0.0.1",
   "type": "module",
   "description": "A tiny and focused UI framework designed for clarity and speed",
