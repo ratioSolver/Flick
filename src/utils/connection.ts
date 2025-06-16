@@ -35,14 +35,14 @@ export class Connection {
       if (token)
         this.socket!.send(JSON.stringify({ msg_type: 'login', token: token }));
       else
-        for (const listener of this.connection_listeners) { listener.connected({}); }
+        for (const listener of this.connection_listeners) { listener.connected(); }
     };
 
     this.socket.onmessage = (event) => {
       console.debug('Received message from server: ', event.data);
       const message = JSON.parse(event.data);
       if (message.msg_type === 'login')
-        for (const listener of this.connection_listeners) { listener.connected(message.info); }
+        for (const listener of this.connection_listeners) { listener.logged_in(message.info); }
       else
         for (const listener of this.connection_listeners) { listener.received_message(message); }
     };
@@ -57,6 +57,38 @@ export class Connection {
       for (const listener of this.connection_listeners) { listener.connection_error(error); }
       setTimeout(() => this.connect(token, timeout), timeout);
     };
+  }
+
+  /**
+   * Logs in a user.
+   * 
+   * @param username Username.
+   * @param password Password.
+   * @param remember_input Whether to remember the input.
+   * @returns Whether the login was successful.
+   */
+  async login(username: string, password: string, remember_input: boolean = false): Promise<boolean> {
+    const response = await fetch(Settings.get_instance().get_host() + '/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
+    if (response.ok) { // Login successful
+      const data = await response.json();
+      if (remember_input)
+        localStorage.setItem('token', data.token);
+      this.connect(data.token);
+      return true;
+    } else { // Login failed
+      console.error('Login failed: ', response.statusText);
+      for (const listener of this.connection_listeners) listener.connection_error(new Error('Login failed: ' + response.statusText));
+      return false;
+    }
+  }
+
+  /**
+   * Logs out the user.
+   */
+  logout(): void {
+    this.socket!.send(JSON.stringify({ msg_type: 'logout' }));
+    localStorage.removeItem('token');
+    for (const listener of this.connection_listeners) { listener.logged_out(); }
   }
 
   /**
@@ -81,10 +113,15 @@ export interface ConnectionListener {
 
   /**
    * Called when the connection to the server is established.
-   *
-   * @param info Information received from the server.
    */
-  connected(info: any): void;
+  connected(): void;
+
+  /**
+   * Called when the user is logged in.
+   *
+   * @param info Information about the logged-in user.
+   */
+  logged_in(info: any): void;
 
   /**
    * Called when a message is received from the server.
@@ -92,6 +129,11 @@ export interface ConnectionListener {
    * @param message Message received from the server.
    */
   received_message(message: any): void;
+
+  /**
+   * Called when the user is logged out.
+   */
+  logged_out(): void;
 
   /**
    * Called when the connection to the server is closed.

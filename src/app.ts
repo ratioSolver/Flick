@@ -282,9 +282,11 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
       this.add_child(component);
   }
 
-  connected(_info: any): void { }
+  connected(): void { }
+  logged_in(_info: any): void { }
   received_message(_message: any): void { }
   disconnected(): void { }
+  logged_out(): void { }
   connection_error(_error: any): void { }
 
   populate_navbar(_container: HTMLDivElement): void { }

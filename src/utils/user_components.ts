@@ -1,5 +1,5 @@
 import { ButtonComponent, Component } from '../app';
-import { CurrentUser } from './user';
+import { Connection } from './connection';
 
 /**
  * Button to log in.
@@ -26,7 +26,7 @@ export class LogOutButton extends ButtonComponent<void> {
     this.element.type = 'button';
     this.element.classList.add('btn', 'btn-primary');
     this.element.textContent = 'Log Out';
-    this.element.addEventListener('click', () => CurrentUser.get_instance().logged_out());
+    this.element.addEventListener('click', () => Connection.get_instance().logout());
   }
 }
 
@@ -40,12 +40,13 @@ export class LogInModal extends Component<void, HTMLDivElement> {
   private remember_input: boolean = false;
 
   /**
-   * Optional callback to run when the modal is hidden.
+   * Optional callback to run when the modal is hiding.
    */
-  public on_hide?: () => void;
+  public on_hide: () => void;
 
   constructor() {
     super(undefined, document.createElement('div'));
+    this.on_hide = () => { this.element.parentElement?.focus(); };
     this.element.classList.add('modal', 'fade');
     this.element.id = 'loginModal';
     this.element.setAttribute('tabindex', '-1');
@@ -86,7 +87,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     const form = document.createElement('form');
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      CurrentUser.get_instance().login(this.username_input, this.password_input);
+      Connection.get_instance().login(this.username_input, this.password_input);
     });
 
     const username_group = document.createElement('div');
@@ -163,7 +164,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     submit.type = 'submit';
     submit.classList.add('btn', 'btn-primary');
     submit.textContent = 'Log In';
-    submit.addEventListener('click', () => CurrentUser.get_instance().login(this.username_input, this.password_input, this.remember_input));
+    submit.addEventListener('click', () => Connection.get_instance().login(this.username_input, this.password_input, this.remember_input));
     footer.appendChild(submit);
 
     content.appendChild(footer);
