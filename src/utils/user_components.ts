@@ -107,6 +107,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
 
     const username_group = document.createElement('div');
     username_group.classList.add('form-floating');
+    username_group.style.marginBottom = '1rem';
 
     const username_input = document.createElement('input');
     username_input.type = 'email';
@@ -127,6 +128,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
 
     const password_group = document.createElement('div');
     password_group.classList.add('form-floating');
+    password_group.style.marginBottom = '1rem';
 
     const password_input = document.createElement('input');
     password_input.type = 'password';
@@ -146,6 +148,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
 
     const remember_group = document.createElement('div');
     remember_group.classList.add('form-check');
+    remember_group.style.marginBottom = '1rem';
 
     const remember_input = document.createElement('input');
     remember_input.type = 'checkbox';
@@ -256,6 +259,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
 
     const username_group = document.createElement('div');
     username_group.classList.add('form-floating');
+    username_group.style.marginBottom = '1rem';
 
     const username_input = document.createElement('input');
     username_input.type = 'email';
@@ -276,6 +280,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
 
     const password_group = document.createElement('div');
     password_group.classList.add('form-floating');
+    password_group.style.marginBottom = '1rem';
 
     const password_input = document.createElement('input');
     password_input.type = 'password';
@@ -295,6 +300,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
 
     const confirm_password_group = document.createElement('div');
     confirm_password_group.classList.add('form-floating');
+    confirm_password_group.style.marginBottom = '1rem';
 
     const confirm_password_input = document.createElement('input');
     confirm_password_input.type = 'password';
