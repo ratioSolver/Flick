@@ -85,6 +85,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
 
     const username_input = document.createElement('input');
     username_input.type = 'email';
+    username_input.autocomplete = 'username';
     username_input.classList.add('form-control');
     username_input.id = 'username';
     username_input.placeholder = 'Username';
@@ -104,6 +105,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
 
     const password_input = document.createElement('input');
     password_input.type = 'password';
+    password_input.autocomplete = 'current-password';
     password_input.classList.add('form-control');
     password_input.id = 'password';
     password_input.placeholder = 'Password';

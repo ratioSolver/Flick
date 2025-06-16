@@ -1,3 +1,4 @@
+import { App } from '../app';
 import { Settings } from "./settings";
 import { Connection } from './connection';
 
@@ -44,6 +45,7 @@ export class CurrentUser implements UserListener {
       Connection.get_instance().connect(data.token);
       return true;
     } else { // Login failed
+      App.get_instance().toast('Login failed: ' + response.statusText);
       return false;
     }
   }
