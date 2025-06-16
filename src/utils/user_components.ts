@@ -39,6 +39,11 @@ export class LogInModal extends Component<void, HTMLDivElement> {
   private password_input: string = '';
   private remember_input: boolean = false;
 
+  /**
+   * Optional callback to run when the modal is hidden.
+   */
+  public on_hide?: () => void;
+
   constructor() {
     super(undefined, document.createElement('div'));
     this.element.classList.add('modal', 'fade');
@@ -46,6 +51,10 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     this.element.setAttribute('tabindex', '-1');
     this.element.setAttribute('aria-labelledby', 'loginModalLabel');
     this.element.setAttribute('aria-hidden', 'true');
+    this.element.addEventListener('hide.bs.modal', () => {
+      if (this.on_hide)
+        this.on_hide();
+    });
 
     const dialog = document.createElement('div');
     dialog.classList.add('modal-dialog');
