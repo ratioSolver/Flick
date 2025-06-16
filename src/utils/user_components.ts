@@ -112,14 +112,14 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     username_input.type = 'email';
     username_input.autocomplete = 'email';
     username_input.classList.add('form-control');
-    username_input.id = 'username';
+    username_input.id = 'login_username';
     username_input.placeholder = 'Username';
     username_input.required = true;
     username_input.addEventListener('input', () => this.username_input = username_input.value);
     username_group.appendChild(username_input);
 
     const username_label = document.createElement('label');
-    username_label.htmlFor = 'username';
+    username_label.htmlFor = 'login_username';
     username_label.textContent = 'Username';
     username_group.appendChild(username_label);
 
@@ -132,14 +132,14 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     password_input.type = 'password';
     password_input.autocomplete = 'current-password';
     password_input.classList.add('form-control');
-    password_input.id = 'password';
+    password_input.id = 'login_password';
     password_input.placeholder = 'Password';
     password_input.required = true;
     password_input.addEventListener('input', () => this.password_input = password_input.value);
     password_group.appendChild(password_input);
 
     const password_label = document.createElement('label');
-    password_label.htmlFor = 'password';
+    password_label.htmlFor = 'login_password';
     password_label.textContent = 'Password';
     password_group.appendChild(password_label);
     form.appendChild(password_group);
@@ -261,14 +261,14 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     username_input.type = 'email';
     username_input.autocomplete = 'email';
     username_input.classList.add('form-control');
-    username_input.id = 'username';
+    username_input.id = 'newuser_username';
     username_input.placeholder = 'Username';
     username_input.required = true;
     username_input.addEventListener('input', () => this.username_input = username_input.value);
     username_group.appendChild(username_input);
 
     const username_label = document.createElement('label');
-    username_label.htmlFor = 'username';
+    username_label.htmlFor = 'newuser_username';
     username_label.textContent = 'Username';
     username_group.appendChild(username_label);
 
@@ -281,14 +281,14 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     password_input.type = 'password';
     password_input.autocomplete = 'current-password';
     password_input.classList.add('form-control');
-    password_input.id = 'password';
+    password_input.id = 'newuser_password';
     password_input.placeholder = 'Password';
     password_input.required = true;
     password_input.addEventListener('input', () => this.password_input = password_input.value);
     password_group.appendChild(password_input);
 
     const password_label = document.createElement('label');
-    password_label.htmlFor = 'password';
+    password_label.htmlFor = 'newuser_password';
     password_label.textContent = 'Password';
     password_group.appendChild(password_label);
     form.appendChild(password_group);
