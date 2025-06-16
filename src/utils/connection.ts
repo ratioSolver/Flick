@@ -83,6 +83,35 @@ export class Connection {
   }
 
   /**
+   * Creates a new user.
+   *
+   * @param username Username for the new user.
+   * @param password Password for the new user.
+   * @param personal_data Additional user data to store.
+   * @returns Whether the user creation was successful.
+   */
+  async new_user(username: string, password: string, personal_data: Record<string, any> = {}): Promise<boolean> {
+    const body: any = { username, password };
+    if (Object.keys(personal_data).length > 0)
+      body.user_data = personal_data;
+    const response = await fetch(Settings.get_instance().get_host() + '/new_user', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (response.ok) { // User creation successful
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      this.connect(data.token);
+      return true;
+    } else { // User creation failed
+      console.error('User creation failed: ', response.statusText);
+      for (const listener of this.connection_listeners) listener.connection_error(new Error('User creation failed: ' + response.statusText));
+      return false;
+    }
+  }
+
+  /**
    * Logs out the user.
    */
   logout(): void {
