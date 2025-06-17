@@ -40,7 +40,6 @@ export class App implements AppListener {
    * @param {Component<any, HTMLElement> | null} component The component to select.
    */
   selected_component(component: Component<any, HTMLElement> | null): void {
-    console.trace('Selected component:', component);
     if (this.selected_comp)
       this.selected_comp.remove();
     this.selected_comp = component;
@@ -110,7 +109,6 @@ export abstract class Component<P, E extends HTMLElement> {
    * @param {Component<any, HTMLElement>} child The child component to add.
    */
   add_child(child: Component<any, HTMLElement>): void {
-    console.trace('Adding child:', child);
     this.child_nodes.add(child);
     this.element.appendChild(child.element);
     child.mounted();
@@ -123,7 +121,6 @@ export abstract class Component<P, E extends HTMLElement> {
    * @throws {Error} If the child is not found.
    */
   remove_child(child: Component<any, HTMLElement>): void {
-    console.trace('Removing child:', child);
     if (this.child_nodes.has(child)) {
       this.child_nodes.delete(child);
       child.remove();
@@ -281,7 +278,6 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
   }
 
   selected_component(component: Component<any, HTMLElement> | null): void {
-    console.trace('AppComponent.selected_component', component);
     if (component)
       this.add_child(component);
   }
