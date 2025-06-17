@@ -27,8 +27,8 @@ export class Connection {
     if (this.socket)
       this.socket.close();
 
-    console.debug('Connecting to server: ', Settings.get_instance().get_host());
-    this.socket = new WebSocket(Settings.get_instance().get_host() + '/' + Settings.get_instance().get_ws_path());
+    console.debug('Connecting to server: ', Settings.get_instance().get_ws_hostname());
+    this.socket = new WebSocket(Settings.get_instance().get_ws_hostname());
 
     this.socket.onopen = () => {
       console.debug('Connected to server');
@@ -52,9 +52,9 @@ export class Connection {
       for (const listener of this.connection_listeners) { listener.disconnected(); }
     };
 
-    this.socket.onerror = (error) => {
-      console.error('Connection error: ', error);
-      for (const listener of this.connection_listeners) { listener.connection_error(error); }
+    this.socket.onerror = (ev: Event) => {
+      console.error('Connection error: ', ev);
+      for (const listener of this.connection_listeners) { listener.connection_error(ev); }
       setTimeout(() => this.connect(token, timeout), timeout);
     };
   }
@@ -68,7 +68,7 @@ export class Connection {
    * @returns Whether the login was successful.
    */
   async login(username: string, password: string, remember_input: boolean = false): Promise<boolean> {
-    const response = await fetch(Settings.get_instance().get_host() + '/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
+    const response = await fetch(Settings.get_instance().get_hostname() + '/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
     if (response.ok) { // Login successful
       const data = await response.json();
       if (remember_input)
@@ -77,7 +77,7 @@ export class Connection {
       return true;
     } else { // Login failed
       console.error('Login failed: ', response.statusText);
-      for (const listener of this.connection_listeners) listener.connection_error(new Error('Login failed: ' + response.statusText));
+      for (const listener of this.connection_listeners) listener.connection_error(new Event(response.statusText));
       return false;
     }
   }
@@ -94,7 +94,7 @@ export class Connection {
     const body: any = { username, password };
     if (Object.keys(personal_data).length > 0)
       body.user_data = personal_data;
-    const response = await fetch(Settings.get_instance().get_host() + '/new_user', {
+    const response = await fetch(Settings.get_instance().get_hostname() + '/new_user', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(body)
@@ -106,7 +106,7 @@ export class Connection {
       return true;
     } else { // User creation failed
       console.error('User creation failed: ', response.statusText);
-      for (const listener of this.connection_listeners) listener.connection_error(new Error('User creation failed: ' + response.statusText));
+      for (const listener of this.connection_listeners) listener.connection_error(new Event(response.statusText));
       return false;
     }
   }
