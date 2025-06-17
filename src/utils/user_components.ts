@@ -254,7 +254,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
         App.get_instance().toast('Passwords do not match.');
         return;
       }
-      Connection.get_instance().new_user(this.username_input, this.password_input);
+      Connection.get_instance().create_user(this.username_input, this.password_input);
     });
 
     const username_group = document.createElement('div');
@@ -341,7 +341,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
         App.get_instance().toast('Passwords do not match.');
         return;
       }
-      Connection.get_instance().new_user(this.username_input, this.password_input);
+      Connection.get_instance().create_user(this.username_input, this.password_input);
     });
     footer.appendChild(submit);
 

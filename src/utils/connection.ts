@@ -20,10 +20,9 @@ export class Connection {
   /**
    * Connects to the server.
    * 
-   * @param token Token to use for authentication.
    * @param timeout Timeout in milliseconds to wait before reconnecting.
    */
-  connect(token: string | null = null, timeout = 5000) {
+  connect(timeout = 5000) {
     if (this.socket)
       this.socket.close();
 
@@ -32,10 +31,10 @@ export class Connection {
 
     this.socket.onopen = () => {
       console.info('Connected to server');
+      for (const listener of this.connection_listeners) { listener.connected(); }
+      const token = localStorage.getItem('token');
       if (token)
-        this.socket!.send(JSON.stringify({ msg_type: 'login', token: token }));
-      else
-        for (const listener of this.connection_listeners) { listener.connected(); }
+        this.socket!.send(JSON.stringify({ msg_type: 'login', token }));
     };
 
     this.socket.onmessage = (event) => {
@@ -55,7 +54,7 @@ export class Connection {
     this.socket.onerror = (ev: Event) => {
       console.error('Connection error: ', ev);
       for (const listener of this.connection_listeners) { listener.connection_error(ev); }
-      setTimeout(() => this.connect(token, timeout), timeout);
+      setTimeout(() => this.connect(timeout), timeout);
     };
   }
 
@@ -74,7 +73,7 @@ export class Connection {
       const data = await response.json();
       if (remember_input)
         localStorage.setItem('token', data.token);
-      this.connect(data.token);
+      this.connect();
       return true;
     } else { // Login failed
       console.error('Login failed: ', response.statusText);
@@ -89,22 +88,32 @@ export class Connection {
    * @param username Username for the new user.
    * @param password Password for the new user.
    * @param personal_data Additional user data to store.
+   * @param set_current_user Whether to set the current user after creation.
    * @returns Whether the user creation was successful.
    */
-  async new_user(username: string, password: string, personal_data: Record<string, any> = {}): Promise<boolean> {
+  async create_user(username: string, password: string, personal_data: Record<string, any> = {}, set_current_user: boolean = true): Promise<boolean> {
     console.debug('Creating new user: ', username);
+    const headers: { 'content-type': string, 'authorization'?: string } = { 'content-type': 'application/json' };
+    const token = localStorage.getItem('token');
+    if (token)
+      headers['authorization'] = `Bearer ${token}`;
     const body: any = { username, password };
     if (Object.keys(personal_data).length > 0)
       body.user_data = personal_data;
-    const response = await fetch(Settings.get_instance().get_host() + '/new_user', {
+    const response = await fetch(Settings.get_instance().get_host() + '/users', {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: headers,
       body: JSON.stringify(body)
     });
     if (response.ok) { // User creation successful
       const data = await response.json();
-      localStorage.setItem('token', data.token);
-      this.connect(data.token);
+      if (set_current_user) {
+        if (this.is_connected())
+          this.logout();
+        localStorage.setItem('token', data.token);
+      }
+      if (!this.is_connected())
+        this.connect();
       return true;
     } else { // User creation failed
       console.error('User creation failed: ', response.statusText);
@@ -121,7 +130,15 @@ export class Connection {
     this.socket!.send(JSON.stringify({ msg_type: 'logout' }));
     localStorage.removeItem('token');
     for (const listener of this.connection_listeners) { listener.logged_out(); }
+    this.socket!.close();
   }
+
+  /**
+   * Checks whether the WebSocket connection is currently open.
+   *
+   * @returns {boolean} `true` if the socket exists and its ready state is `WebSocket.OPEN`, otherwise `false`.
+   */
+  is_connected(): boolean { return this.socket !== null && this.socket.readyState === WebSocket.OPEN; }
 
   /**
    * Adds a connection listener.
