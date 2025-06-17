@@ -27,11 +27,11 @@ export class Connection {
     if (this.socket)
       this.socket.close();
 
-    console.debug('Connecting to server: ', Settings.get_instance().get_ws_host());
+    console.info('Connecting to server: ', Settings.get_instance().get_ws_host());
     this.socket = new WebSocket(Settings.get_instance().get_ws_host());
 
     this.socket.onopen = () => {
-      console.debug('Connected to server');
+      console.info('Connected to server');
       if (token)
         this.socket!.send(JSON.stringify({ msg_type: 'login', token: token }));
       else
@@ -39,7 +39,7 @@ export class Connection {
     };
 
     this.socket.onmessage = (event) => {
-      console.debug('Received message from server: ', event.data);
+      console.trace('Received message from server: ', event.data);
       const message = JSON.parse(event.data);
       if (message.msg_type === 'login')
         for (const listener of this.connection_listeners) { listener.logged_in(message.info); }
@@ -48,7 +48,7 @@ export class Connection {
     };
 
     this.socket.onclose = () => {
-      console.debug('Disconnected from server');
+      console.info('Disconnected from server');
       for (const listener of this.connection_listeners) { listener.disconnected(); }
     };
 
@@ -68,6 +68,7 @@ export class Connection {
    * @returns Whether the login was successful.
    */
   async login(username: string, password: string, remember_input: boolean = false): Promise<boolean> {
+    console.debug('Logging in user: ', username);
     const response = await fetch(Settings.get_instance().get_hostname() + '/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
     if (response.ok) { // Login successful
       const data = await response.json();
@@ -91,6 +92,7 @@ export class Connection {
    * @returns Whether the user creation was successful.
    */
   async new_user(username: string, password: string, personal_data: Record<string, any> = {}): Promise<boolean> {
+    console.debug('Creating new user: ', username);
     const body: any = { username, password };
     if (Object.keys(personal_data).length > 0)
       body.user_data = personal_data;
@@ -115,6 +117,7 @@ export class Connection {
    * Logs out the user.
    */
   logout(): void {
+    console.debug('Logging out user');
     this.socket!.send(JSON.stringify({ msg_type: 'logout' }));
     localStorage.removeItem('token');
     for (const listener of this.connection_listeners) { listener.logged_out(); }
