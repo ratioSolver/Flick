@@ -27,8 +27,8 @@ export class Connection {
     if (this.socket)
       this.socket.close();
 
-    console.debug('Connecting to server: ', Settings.get_instance().get_ws_hostname());
-    this.socket = new WebSocket(Settings.get_instance().get_ws_hostname());
+    console.debug('Connecting to server: ', Settings.get_instance().get_ws_host());
+    this.socket = new WebSocket(Settings.get_instance().get_ws_host());
 
     this.socket.onopen = () => {
       console.debug('Connected to server');
