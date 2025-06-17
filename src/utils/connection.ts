@@ -69,7 +69,7 @@ export class Connection {
    */
   async login(username: string, password: string, remember_input: boolean = false): Promise<boolean> {
     console.debug('Logging in user: ', username);
-    const response = await fetch(Settings.get_instance().get_hostname() + '/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
+    const response = await fetch(Settings.get_instance().get_host() + '/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
     if (response.ok) { // Login successful
       const data = await response.json();
       if (remember_input)
@@ -96,7 +96,7 @@ export class Connection {
     const body: any = { username, password };
     if (Object.keys(personal_data).length > 0)
       body.user_data = personal_data;
-    const response = await fetch(Settings.get_instance().get_hostname() + '/new_user', {
+    const response = await fetch(Settings.get_instance().get_host() + '/new_user', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(body)
