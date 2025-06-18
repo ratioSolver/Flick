@@ -202,8 +202,19 @@ export abstract class ListComponent<P, E extends HTMLElement, L extends HTMLElem
  */
 export class AppComponent extends Component<App, HTMLDivElement> implements AppListener, ConnectionListener {
 
-  constructor() {
-    super(App.get_instance(), document.querySelector('#app') as HTMLDivElement);
+  /**
+   * The navbar collapse element.
+   * This is used to manage the navigation bar's collapsible behavior.
+   */
+  protected readonly navbar_collapse: HTMLElement;
+
+  /**
+   * Create an instance of the AppComponent.
+   * 
+   * @param {string} id The ID of the element to use as the root of the application.
+   */
+  constructor(id: string = 'app') {
+    super(App.get_instance(), document.querySelector('#' + id) as HTMLDivElement);
     this.element.classList.add('d-flex', 'flex-column', 'h-100');
 
     const fragment = document.createDocumentFragment();
@@ -227,11 +238,10 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
     toggler.appendChild(toggler_span);
     nav_container.appendChild(toggler);
 
-    const navbar_collapse = document.createElement('div');
-    navbar_collapse.classList.add('collapse', 'navbar-collapse');
-    navbar_collapse.id = 'navbarNav';
-    this.populate_navbar(navbar_collapse);
-    nav_container.appendChild(navbar_collapse);
+    this.navbar_collapse = document.createElement('div');
+    this.navbar_collapse.classList.add('collapse', 'navbar-collapse');
+    this.navbar_collapse.id = 'navbarNav';
+    nav_container.appendChild(this.navbar_collapse);
 
     navbar.appendChild(nav_container);
     fragment.appendChild(navbar);
@@ -289,8 +299,6 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
   logged_out(): void { }
   connection_error(_error: any): void { }
 
-  populate_navbar(_container: HTMLDivElement): void { }
-
   override unmounting(): void {
     App.get_instance().remove_app_listener(this);
     Connection.get_instance().remove_connection_listener(this);
@@ -320,8 +328,8 @@ export class ButtonComponent<P> extends Component<P, HTMLButtonElement> {
 }
 
 /**
- * The `DivComponent` class represents a div component in the application.
- * It manages the payload and element of the div component.
+ * The `UListComponent` class represents an unordered list component in the application.
+ * It manages the payload and element of the unordered list component and its children.
  *
  * @template P The type of the payload.
  */
