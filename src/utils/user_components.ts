@@ -3,23 +3,24 @@ import { App, Component } from '../app';
 import { ButtonComponent } from '../components/button';
 import { Connection, ConnectionListener } from './connection';
 
-const new_user_modal_id = 'newUserModal';
-const login_modal_id = 'loginModal';
-
 /**
  * Button to create a new user.
  */
 export class NewUserButton extends ButtonComponent<void> implements ConnectionListener {
 
-  constructor() {
+  /**
+   * Creates a new button element for triggering the display of a modal dialog.
+   * 
+   * @param modal_id - The ID of the modal element to be shown when the button is clicked. Defaults to 'newUserModal'.
+   */
+  constructor(modal_id: string = 'newUserModal') {
     super();
     this.element.type = 'button';
     this.element.classList.add('btn', 'btn-primary');
-    this.element.setAttribute('data-bs-toggle', 'modal');
-    this.element.setAttribute('data-bs-target', '#' + new_user_modal_id);
     this.element.textContent = 'New User';
     this.element.style.marginLeft = 'auto';
     this.element.style.display = 'inline-block';
+    this.element.addEventListener('click', () => Modal.getOrCreateInstance(document.getElementById(modal_id)!).show());
 
     Connection.get_instance().add_connection_listener(this);
   }
@@ -47,15 +48,19 @@ export class NewUserButton extends ButtonComponent<void> implements ConnectionLi
  */
 export class LogInButton extends ButtonComponent<void> implements ConnectionListener {
 
-  constructor() {
+  /**
+   * Creates a new button element for triggering the display of a login modal dialog.
+   * 
+   * @param modal_id - The ID of the modal element to be shown when the button is clicked. Defaults to 'loginModal'.
+   */
+  constructor(modal_id: string = 'loginModal') {
     super();
     this.element.type = 'button';
     this.element.classList.add('btn', 'btn-primary');
-    this.element.setAttribute('data-bs-toggle', 'modal');
-    this.element.setAttribute('data-bs-target', '#' + login_modal_id);
     this.element.textContent = 'Log In';
     this.element.style.marginLeft = '10px';
     this.element.style.display = 'inline-block';
+    this.element.addEventListener('click', () => Modal.getOrCreateInstance(document.getElementById(modal_id)!).show());
 
     Connection.get_instance().add_connection_listener(this);
   }
@@ -83,6 +88,9 @@ export class LogInButton extends ButtonComponent<void> implements ConnectionList
  */
 export class LogOutButton extends ButtonComponent<void> implements ConnectionListener {
 
+  /**
+   * Creates a new button element for logging out the user.
+   */
   constructor() {
     super();
     this.element.type = 'button';
@@ -131,7 +139,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     super(undefined, document.createElement('div'));
     this.on_hide = () => { this.element.parentElement?.focus(); };
     this.element.classList.add('modal', 'fade');
-    this.element.id = login_modal_id;
+    this.element.id = 'loginModal';
     this.element.setAttribute('tabindex', '-1');
     this.element.setAttribute('aria-labelledby', 'loginModalLabel');
     this.element.setAttribute('aria-hidden', 'true');
@@ -265,7 +273,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     Connection.get_instance().login(this.username_input, this.password_input, this.remember_input)
       .then((result: boolean) => {
         if (result)
-          Modal.getOrCreateInstance(document.getElementById(login_modal_id)!).hide();
+          Modal.getOrCreateInstance(this.element).hide();
       });
   }
 }
@@ -288,7 +296,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     super(undefined, document.createElement('div'));
     this.on_hide = () => { this.element.parentElement?.focus(); };
     this.element.classList.add('modal', 'fade');
-    this.element.id = new_user_modal_id;
+    this.element.id = 'newUserModal';
     this.element.setAttribute('tabindex', '-1');
     this.element.setAttribute('aria-labelledby', 'newUserModalLabel');
     this.element.setAttribute('aria-hidden', 'true');
@@ -427,7 +435,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     Connection.get_instance().create_user(this.username_input, this.password_input)
       .then((result: boolean) => {
         if (result)
-          Modal.getOrCreateInstance(document.getElementById(new_user_modal_id)!).hide();
+          Modal.getOrCreateInstance(this.element).hide();
       });
   }
 }

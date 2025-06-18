@@ -1,7 +1,7 @@
-import { App, Component } from "../app";
+import { Component } from "../app";
 import { Offcanvas } from "bootstrap";
 
-export class BrandComponent extends Component<App, HTMLAnchorElement> {
+export class BrandComponent extends Component<void, HTMLAnchorElement> {
 
   /**
    * Creates a new brand component for the navbar.
@@ -15,7 +15,7 @@ export class BrandComponent extends Component<App, HTMLAnchorElement> {
    * with the brand icon and name.
    */
   constructor(name: string = 'Flick', icon: string = 'favicon.ico', offcanvas_id: string | null = null) {
-    super(App.get_instance(), document.createElement('a'));
+    super(undefined, document.createElement('a'));
     this.element.classList.add('navbar-brand');
     this.element.href = '#';
     if (offcanvas_id)
