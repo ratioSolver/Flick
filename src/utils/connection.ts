@@ -9,7 +9,10 @@ export class Connection {
   private socket: WebSocket | null = null;
   private connection_listeners: Set<ConnectionListener> = new Set();
 
-  private constructor() { }
+  private constructor() {
+    console.debug('localStorage available: ', typeof localStorage !== 'undefined');
+    console.debug('localStorage token: ', localStorage.getItem('token'));
+  }
 
   static get_instance() {
     if (!Connection.instance)
@@ -33,6 +36,7 @@ export class Connection {
       console.info('Connected to server');
       for (const listener of this.connection_listeners) { listener.connected(); }
       const token = localStorage.getItem('token');
+      console.debug('Sending login token: ', token);
       if (token)
         this.socket!.send(JSON.stringify({ msg_type: 'login', token }));
     };
@@ -71,8 +75,11 @@ export class Connection {
     const response = await fetch(Settings.get_instance().get_host() + '/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
     if (response.ok) { // Login successful
       const data = await response.json();
-      if (remember_input)
+      if (remember_input) {
+        console.debug('Storing token in localStorage');
         localStorage.setItem('token', data.token);
+        console.debug('localStorage token: ', localStorage.getItem('token'));
+      }
       this.connect();
       return true;
     } else { // Login failed
@@ -95,6 +102,7 @@ export class Connection {
     console.debug('Creating new user: ', username);
     const headers: { 'content-type': string, 'authorization'?: string } = { 'content-type': 'application/json' };
     const token = localStorage.getItem('token');
+    console.debug('Using token for user creation: ', token);
     if (token)
       headers['authorization'] = `Bearer ${token}`;
     const body: any = { username, password };
@@ -128,7 +136,9 @@ export class Connection {
   logout(): void {
     console.debug('Logging out user');
     this.socket!.send(JSON.stringify({ msg_type: 'logout' }));
+    console.debug('Removing token from localStorage');
     localStorage.removeItem('token');
+    console.debug('localStorage token: ', localStorage.getItem('token'));
     for (const listener of this.connection_listeners) { listener.logged_out(); }
     this.socket!.close();
   }

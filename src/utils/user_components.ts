@@ -1,3 +1,4 @@
+import { Modal } from 'bootstrap';
 import { App, Component } from '../app';
 import { ButtonComponent } from '../components/button';
 import { Connection, ConnectionListener } from './connection';
@@ -85,7 +86,7 @@ export class LogOutButton extends ButtonComponent<void> implements ConnectionLis
     this.element.classList.add('btn', 'btn-primary');
     this.element.textContent = 'Log Out';
     this.element.addEventListener('click', () => Connection.get_instance().logout());
-    this.element.style.marginLeft = '10px';
+    this.element.style.marginLeft = 'auto';
     this.element.style.display = 'none';
 
     Connection.get_instance().add_connection_listener(this);
@@ -166,7 +167,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     const form = document.createElement('form');
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      Connection.get_instance().login(this.username_input, this.password_input);
+      this.login();
     });
 
     const username_group = document.createElement('div');
@@ -246,7 +247,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     submit.type = 'submit';
     submit.classList.add('btn', 'btn-primary');
     submit.textContent = 'Log In';
-    submit.addEventListener('click', () => Connection.get_instance().login(this.username_input, this.password_input, this.remember_input));
+    submit.addEventListener('click', () => this.login());
     footer.appendChild(submit);
 
     content.appendChild(footer);
@@ -254,6 +255,14 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     dialog.appendChild(content);
 
     this.element.appendChild(dialog);
+  }
+
+  private login(): void {
+    Connection.get_instance().login(this.username_input, this.password_input, this.remember_input)
+      .then((result: boolean) => {
+        if (result)
+          Modal.getInstance(this.element)!.hide();
+      });
   }
 }
 
@@ -314,11 +323,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     const form = document.createElement('form');
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      if (this.password_input !== this.confirm_password_input) {
-        App.get_instance().toast('Passwords do not match.');
-        return;
-      }
-      Connection.get_instance().create_user(this.username_input, this.password_input);
+      this.create_user();
     });
 
     const username_group = document.createElement('div');
@@ -400,13 +405,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     submit.type = 'submit';
     submit.classList.add('btn', 'btn-primary');
     submit.textContent = 'Create User';
-    submit.addEventListener('click', () => {
-      if (this.password_input !== this.confirm_password_input) {
-        App.get_instance().toast('Passwords do not match.');
-        return;
-      }
-      Connection.get_instance().create_user(this.username_input, this.password_input);
-    });
+    submit.addEventListener('click', () => this.create_user());
     footer.appendChild(submit);
 
     content.appendChild(footer);
@@ -414,5 +413,17 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     dialog.appendChild(content);
 
     this.element.appendChild(dialog);
+  }
+
+  private create_user(): void {
+    if (this.password_input !== this.confirm_password_input) {
+      App.get_instance().toast('Passwords do not match.');
+      return;
+    }
+    Connection.get_instance().create_user(this.username_input, this.password_input)
+      .then((result: boolean) => {
+        if (result)
+          Modal.getInstance(this.element)!.hide();
+      });
   }
 }
