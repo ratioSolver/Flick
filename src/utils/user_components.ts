@@ -1,4 +1,5 @@
-import { App, ButtonComponent, Component } from '../app';
+import { App, Component } from '../app';
+import { ButtonComponent } from '../components/button';
 import { Connection } from './connection';
 
 /**
