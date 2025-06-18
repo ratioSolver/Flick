@@ -4,6 +4,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 export * from './app';
 
 export * from './components/app';
+export * from './components/brand';
 export * from './components/button';
 export * from './components/sidebar';
 export * from './components/offcanvas';
