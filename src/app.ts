@@ -203,10 +203,10 @@ export abstract class ListComponent<P, E extends HTMLElement, L extends HTMLElem
 export class AppComponent extends Component<App, HTMLDivElement> implements AppListener, ConnectionListener {
 
   /**
-   * The navbar collapse element.
-   * This is used to manage the navigation bar's collapsible behavior.
+   * Reference to the navigation bar element in the DOM.
+   * This element is used to control or update the application's navigation UI.
    */
-  protected readonly navbar_collapse: HTMLElement;
+  protected readonly navbar: HTMLElement;
 
   /**
    * Create an instance of the AppComponent.
@@ -238,10 +238,10 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
     toggler.appendChild(toggler_span);
     nav_container.appendChild(toggler);
 
-    this.navbar_collapse = document.createElement('div');
-    this.navbar_collapse.classList.add('collapse', 'navbar-collapse');
-    this.navbar_collapse.id = 'navbarNav';
-    nav_container.appendChild(this.navbar_collapse);
+    this.navbar = document.createElement('div');
+    this.navbar.classList.add('collapse', 'navbar-collapse');
+    this.navbar.id = 'navbarNav';
+    nav_container.appendChild(this.navbar);
 
     navbar.appendChild(nav_container);
     fragment.appendChild(navbar);
