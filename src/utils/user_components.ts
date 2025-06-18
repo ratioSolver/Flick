@@ -265,7 +265,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     Connection.get_instance().login(this.username_input, this.password_input, this.remember_input)
       .then((result: boolean) => {
         if (result)
-          Modal.getOrCreateInstance(login_modal_id)!.hide();
+          Modal.getOrCreateInstance(document.getElementById(login_modal_id)!).hide();
       });
   }
 }
@@ -427,7 +427,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     Connection.get_instance().create_user(this.username_input, this.password_input)
       .then((result: boolean) => {
         if (result)
-          Modal.getOrCreateInstance(new_user_modal_id)!.hide();
+          Modal.getOrCreateInstance(document.getElementById(new_user_modal_id)!).hide();
       });
   }
 }
