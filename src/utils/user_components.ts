@@ -1,26 +1,11 @@
 import { App, Component } from '../app';
 import { ButtonComponent } from '../components/button';
-import { Connection } from './connection';
-
-/**
- * Button to log in.
- */
-export class LogInButton extends ButtonComponent<void> {
-
-  constructor() {
-    super();
-    this.element.type = 'button';
-    this.element.classList.add('btn', 'btn-primary');
-    this.element.setAttribute('data-bs-toggle', 'modal');
-    this.element.setAttribute('data-bs-target', '#loginModal');
-    this.element.textContent = 'Log In';
-  }
-}
+import { Connection, ConnectionListener } from './connection';
 
 /**
  * Button to create a new user.
  */
-export class NewUserButton extends ButtonComponent<void> {
+export class NewUserButton extends ButtonComponent<void> implements ConnectionListener {
 
   constructor() {
     super();
@@ -29,13 +14,70 @@ export class NewUserButton extends ButtonComponent<void> {
     this.element.setAttribute('data-bs-toggle', 'modal');
     this.element.setAttribute('data-bs-target', '#newUserModal');
     this.element.textContent = 'New User';
+    this.element.style.marginLeft = 'auto';
+    this.element.style.display = 'inline-block';
+
+    Connection.get_instance().add_connection_listener(this);
+  }
+
+  connected(): void { }
+  logged_in(_info: any): void {
+    // Hide the button if the user is already logged in
+    this.element.style.display = 'none';
+  }
+  received_message(_message: any): void { }
+  logged_out(): void {
+    // Show the button if the user is logged out
+    this.element.style.display = 'inline-block';
+  }
+  disconnected(): void { }
+  connection_error(_error: any): void { }
+
+  override unmounting(): void {
+    Connection.get_instance().remove_connection_listener(this);
+  }
+}
+
+/**
+ * Button to log in.
+ */
+export class LogInButton extends ButtonComponent<void> implements ConnectionListener {
+
+  constructor() {
+    super();
+    this.element.type = 'button';
+    this.element.classList.add('btn', 'btn-primary');
+    this.element.setAttribute('data-bs-toggle', 'modal');
+    this.element.setAttribute('data-bs-target', '#loginModal');
+    this.element.textContent = 'Log In';
+    this.element.style.marginLeft = '10px';
+    this.element.style.display = 'inline-block';
+
+    Connection.get_instance().add_connection_listener(this);
+  }
+
+  connected(): void { }
+  logged_in(_info: any): void {
+    // Hide the button if the user is already logged in
+    this.element.style.display = 'none';
+  }
+  received_message(_message: any): void { }
+  logged_out(): void {
+    // Show the button if the user is logged out
+    this.element.style.display = 'inline-block';
+  }
+  disconnected(): void { }
+  connection_error(_error: any): void { }
+
+  override unmounting(): void {
+    Connection.get_instance().remove_connection_listener(this);
   }
 }
 
 /**
  * Button to log out.
  */
-export class LogOutButton extends ButtonComponent<void> {
+export class LogOutButton extends ButtonComponent<void> implements ConnectionListener {
 
   constructor() {
     super();
@@ -43,6 +85,27 @@ export class LogOutButton extends ButtonComponent<void> {
     this.element.classList.add('btn', 'btn-primary');
     this.element.textContent = 'Log Out';
     this.element.addEventListener('click', () => Connection.get_instance().logout());
+    this.element.style.marginLeft = '10px';
+    this.element.style.display = 'none';
+
+    Connection.get_instance().add_connection_listener(this);
+  }
+
+  connected(): void { }
+  logged_in(_info: any): void {
+    // Show the button if the user is logged in
+    this.element.style.display = 'inline-block';
+  }
+  received_message(_message: any): void { }
+  logged_out(): void {
+    // Hide the button if the user is logged out
+    this.element.style.display = 'none';
+  }
+  disconnected(): void { }
+  connection_error(_error: any): void { }
+
+  override unmounting(): void {
+    Connection.get_instance().remove_connection_listener(this);
   }
 }
 
