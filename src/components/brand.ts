@@ -21,7 +21,7 @@ export class BrandComponent extends Component<App, HTMLAnchorElement> {
     if (offcanvas_id)
       this.element.addEventListener('click', (event) => {
         event.preventDefault();
-        Offcanvas.getOrCreateInstance(document.getElementById(offcanvas_id)!).show();
+        Offcanvas.getOrCreateInstance(offcanvas_id).show();
       });
 
     const brand_container = document.createElement('div');

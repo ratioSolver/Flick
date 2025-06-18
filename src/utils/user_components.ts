@@ -3,6 +3,9 @@ import { App, Component } from '../app';
 import { ButtonComponent } from '../components/button';
 import { Connection, ConnectionListener } from './connection';
 
+const new_user_modal_id = 'newUserModal';
+const login_modal_id = 'loginModal';
+
 /**
  * Button to create a new user.
  */
@@ -13,7 +16,7 @@ export class NewUserButton extends ButtonComponent<void> implements ConnectionLi
     this.element.type = 'button';
     this.element.classList.add('btn', 'btn-primary');
     this.element.setAttribute('data-bs-toggle', 'modal');
-    this.element.setAttribute('data-bs-target', '#newUserModal');
+    this.element.setAttribute('data-bs-target', '#' + new_user_modal_id);
     this.element.textContent = 'New User';
     this.element.style.marginLeft = 'auto';
     this.element.style.display = 'inline-block';
@@ -49,7 +52,7 @@ export class LogInButton extends ButtonComponent<void> implements ConnectionList
     this.element.type = 'button';
     this.element.classList.add('btn', 'btn-primary');
     this.element.setAttribute('data-bs-toggle', 'modal');
-    this.element.setAttribute('data-bs-target', '#loginModal');
+    this.element.setAttribute('data-bs-target', '#' + login_modal_id);
     this.element.textContent = 'Log In';
     this.element.style.marginLeft = '10px';
     this.element.style.display = 'inline-block';
@@ -128,7 +131,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     super(undefined, document.createElement('div'));
     this.on_hide = () => { this.element.parentElement?.focus(); };
     this.element.classList.add('modal', 'fade');
-    this.element.id = 'loginModal';
+    this.element.id = login_modal_id;
     this.element.setAttribute('tabindex', '-1');
     this.element.setAttribute('aria-labelledby', 'loginModalLabel');
     this.element.setAttribute('aria-hidden', 'true');
@@ -219,6 +222,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     remember_input.type = 'checkbox';
     remember_input.classList.add('form-check-input');
     remember_input.id = 'remember';
+    remember_input.checked = true; // Default to checked
     remember_input.addEventListener('input', () => this.remember_input = remember_input.checked);
     remember_group.appendChild(remember_input);
 
@@ -261,7 +265,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     Connection.get_instance().login(this.username_input, this.password_input, this.remember_input)
       .then((result: boolean) => {
         if (result)
-          Modal.getInstance(this.element)!.hide();
+          Modal.getOrCreateInstance(login_modal_id)!.hide();
       });
   }
 }
@@ -284,7 +288,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     super(undefined, document.createElement('div'));
     this.on_hide = () => { this.element.parentElement?.focus(); };
     this.element.classList.add('modal', 'fade');
-    this.element.id = 'newUserModal';
+    this.element.id = new_user_modal_id;
     this.element.setAttribute('tabindex', '-1');
     this.element.setAttribute('aria-labelledby', 'newUserModalLabel');
     this.element.setAttribute('aria-hidden', 'true');
@@ -423,7 +427,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     Connection.get_instance().create_user(this.username_input, this.password_input)
       .then((result: boolean) => {
         if (result)
-          Modal.getInstance(this.element)!.hide();
+          Modal.getOrCreateInstance(new_user_modal_id)!.hide();
       });
   }
 }
