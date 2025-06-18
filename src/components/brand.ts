@@ -3,17 +3,26 @@ import { Offcanvas } from "bootstrap";
 
 export class BrandComponent extends Component<App, HTMLAnchorElement> {
 
-  constructor(offcanvas_id: string = 'flick-offcanvas', name: string = 'Flick', icon: string = 'favicon.ico') {
+  /**
+   * Creates a new brand component for the navbar.
+   *
+   * @param name - The display name of the brand. Defaults to 'Flick'.
+   * @param icon - The URL or path to the brand icon image. Defaults to 'favicon.ico'.
+   * @param offcanvas_id - The ID of the offcanvas element to show when the brand is clicked. Defaults to 'flick-offcanvas'.
+   *
+   * The constructor initializes the brand element as an anchor tag styled for the navbar,
+   * sets up a click event to show the specified offcanvas, and creates a flex container
+   * with the brand icon and name.
+   */
+  constructor(name: string = 'Flick', icon: string = 'favicon.ico', offcanvas_id: string | null = null) {
     super(App.get_instance(), document.createElement('a'));
     this.element.classList.add('navbar-brand');
     this.element.href = '#';
-    this.element.addEventListener('click', (event) => {
-      event.preventDefault();
-      const offcanvasElement = document.getElementById(offcanvas_id);
-      if (offcanvasElement) {
-        Offcanvas.getOrCreateInstance(offcanvasElement).show();
-      }
-    });
+    if (offcanvas_id)
+      this.element.addEventListener('click', (event) => {
+        event.preventDefault();
+        Offcanvas.getOrCreateInstance(document.getElementById(offcanvas_id)!).show();
+      });
 
     const brand_container = document.createElement('div');
     brand_container.style.display = 'flex';
