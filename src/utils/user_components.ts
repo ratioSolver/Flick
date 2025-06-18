@@ -128,7 +128,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
 
   private username_input: string = '';
   private password_input: string = '';
-  private remember_input: boolean = false;
+  private remember_input: boolean = true;
 
   /**
    * Optional callback to run when the modal is hiding.
@@ -230,7 +230,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
     remember_input.type = 'checkbox';
     remember_input.classList.add('form-check-input');
     remember_input.id = 'remember';
-    remember_input.checked = true; // Default to checked
+    remember_input.checked = this.remember_input;
     remember_input.addEventListener('input', () => this.remember_input = remember_input.checked);
     remember_group.appendChild(remember_input);
 
