@@ -17,25 +17,33 @@ export class MapLayer<P = any> implements Layer {
 
 export class MapComponent extends Component<void, HTMLDivElement> {
 
-  readonly map: L.Map;
+  private readonly map: L.Map;
 
   constructor() {
     super(undefined, document.createElement('div'));
+    this.element.style.width = '100%';
+    this.element.style.height = '100%';
+
     this.map = L.map(this.element);
 
+    // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(this.map);
-  }
 
-  get_map(): L.Map { return this.map; }
+    // Set initial view to Rome, Italy
+    this.set_view([41.9028, 12.4964], 13);
+  }
 
   set_view(center: L.LatLngExpression, zoom?: number, options?: L.ZoomPanOptions): this {
     this.map.setView(center, zoom, options);
     return this;
   }
+
+  add_layer(layer: Layer): void { layer.add_to(this.map); }
+  remove_layer(layer: Layer): void { layer.remove_from(this.map); }
 }
 
 export interface HeatTile {
-  bounds: [[number, number], [number, number]];
+  bounds: L.LatLngBoundsExpression;
   value: number;
 }
 
