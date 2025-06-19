@@ -8,6 +8,7 @@ export * from './components/brand';
 export * from './components/button';
 export * from './components/sidebar';
 export * from './components/offcanvas';
+export * from './components/map';
 
 export * from './utils/settings';
 export * from './utils/connection';
