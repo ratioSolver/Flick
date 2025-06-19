@@ -17,13 +17,15 @@ export class MapLayer<P = any> implements Layer {
 
 export class MapComponent extends Component<void, HTMLDivElement> {
 
-  private readonly map: L.Map;
+  private map: L.Map | undefined;
 
   constructor() {
     super(undefined, document.createElement('div'));
     this.element.style.width = '100%';
     this.element.style.height = '100%';
+  }
 
+  override mounted(): void {
     this.map = L.map(this.element);
 
     // Add OpenStreetMap tile layer
@@ -34,12 +36,12 @@ export class MapComponent extends Component<void, HTMLDivElement> {
   }
 
   set_view(center: L.LatLngExpression, zoom?: number, options?: L.ZoomPanOptions): this {
-    this.map.setView(center, zoom, options);
+    this.map!.setView(center, zoom, options);
     return this;
   }
 
-  add_layer(layer: Layer): void { layer.add_to(this.map); }
-  remove_layer(layer: Layer): void { layer.remove_from(this.map); }
+  add_layer(layer: Layer): void { layer.add_to(this.map!); }
+  remove_layer(layer: Layer): void { layer.remove_from(this.map!); }
 }
 
 export interface HeatTile {
