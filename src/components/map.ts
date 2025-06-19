@@ -27,6 +27,7 @@ export class MapComponent extends Component<void, HTMLDivElement> {
 
   override mounted(): void {
     this.map = L.map(this.element);
+    this.map.invalidateSize();
 
     // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(this.map);
