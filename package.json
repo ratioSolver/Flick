@@ -1,6 +1,6 @@
 {
   "name": "@ratiosolver/flick",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "type": "module",
   "description": "A tiny and focused UI framework designed for clarity and speed",
   "main": "dist/index.js",
@@ -30,12 +30,10 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
-    "@types/leaflet": "^1.9.18",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
-    "bootstrap": "^5.3.6",
-    "leaflet": "^1.9.4"
+    "bootstrap": "^5.3.6"
   },
   "publishConfig": {
     "access": "public"
