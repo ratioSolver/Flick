@@ -8,13 +8,15 @@ export class BrandComponent extends Component<void, HTMLAnchorElement> {
    *
    * @param name - The display name of the brand. Defaults to 'Flick'.
    * @param icon - The URL or path to the brand icon image. Defaults to 'favicon.ico'.
+   * @param icon_width - The width of the brand icon in pixels. Defaults to 32.
+   * @param icon_height - The height of the brand icon in pixels. Defaults to 32.
    * @param offcanvas_id - The ID of the offcanvas element to show when the brand is clicked. Defaults to 'flick-offcanvas'.
    *
    * The constructor initializes the brand element as an anchor tag styled for the navbar,
    * sets up a click event to show the specified offcanvas, and creates a flex container
    * with the brand icon and name.
    */
-  constructor(name: string = 'Flick', icon: string = 'favicon.ico', offcanvas_id: string | null = null) {
+  constructor(name: string = 'Flick', icon: string = 'favicon.ico', icon_width: number = 32, icon_height: number = 32, offcanvas_id: string | null = null) {
     super(undefined, document.createElement('a'));
     this.element.classList.add('navbar-brand');
     this.element.href = '#';
@@ -32,8 +34,8 @@ export class BrandComponent extends Component<void, HTMLAnchorElement> {
     const brand_icon = document.createElement('img');
     brand_icon.src = icon;
     brand_icon.alt = name;
-    brand_icon.width = 32;
-    brand_icon.height = 32;
+    brand_icon.width = icon_width;
+    brand_icon.height = icon_height;
     brand_icon.classList.add('d-inline-block', 'align-text-top', 'me-1');
 
     const brand_text = document.createElement('span');
