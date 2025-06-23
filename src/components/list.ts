@@ -71,7 +71,7 @@ export class UListElement<P> extends Component<P, HTMLLIElement> implements Sele
   private readonly a: HTMLAnchorElement;
   private icn: Element;
   private text: Text;
-  private readonly selected_factory: () => Component<P, HTMLLIElement>;
+  private readonly selected_factory: () => Component<P, HTMLElement>;
 
   /**
    * Creates an instance of UListElement.
@@ -82,7 +82,7 @@ export class UListElement<P> extends Component<P, HTMLLIElement> implements Sele
    * @param text The text content of the list item.
    * @param selected_factory A factory function that returns the selected component when this element is selected.
    */
-  constructor(group: SelectorGroup, payload: P, icn: Element, text: string, selected_factory: () => Component<P, HTMLLIElement>) {
+  constructor(group: SelectorGroup, payload: P, icn: Element, text: string, selected_factory: () => Component<P, HTMLElement>) {
     super(payload, document.createElement('li'));
     this.group = group;
     this.selected_factory = selected_factory;
