@@ -1,4 +1,5 @@
-import { Component } from "../app";
+import { App, Component } from "../app";
+import { Selector, SelectorGroup } from "../utils/selector";
 
 /**
  * The `ListComponent` class represents a list component in the application.
@@ -56,6 +57,69 @@ export class UListComponent<P> extends ListComponent<P, HTMLLIElement, HTMLUList
   constructor(payload: Component<P, HTMLLIElement>[], compareFn?: (a: P, b: P) => number) {
     super(payload, document.createElement('ul'), compareFn);
   }
+}
+
+/**
+ * The `UListElement` class represents an element in an unordered list component.
+ * It manages the payload, icon, and text of the list item.
+ *
+ * @template P The type of the payload.
+ */
+export class UListElement<P> extends Component<P, HTMLLIElement> implements Selector {
+
+  private readonly group: SelectorGroup;
+  private readonly a: HTMLAnchorElement;
+  private icn: Element;
+  private text: Text;
+  private readonly selected_factory: () => Component<P, HTMLLIElement>;
+
+  /**
+   * Creates an instance of UListElement.
+   * 
+   * @param group The selector group this element belongs to.
+   * @param payload The payload associated with this element.
+   * @param icn The icon element to be displayed in the list item.
+   * @param text The text content of the list item.
+   * @param selected_factory A factory function that returns the selected component when this element is selected.
+   */
+  constructor(group: SelectorGroup, payload: P, icn: Element, text: string, selected_factory: () => Component<P, HTMLLIElement>) {
+    super(payload, document.createElement('li'));
+    this.group = group;
+    this.selected_factory = selected_factory;
+    this.element.classList.add('nav-item', 'list-group-item');
+
+    this.a = document.createElement('a');
+    this.a.classList.add('nav-link', 'd-flex', 'align-items-center');
+    this.a.href = '#';
+    this.icn = icn;
+    this.icn.classList.add('me-2');
+    this.a.append(this.icn);
+    this.text = document.createTextNode(text);
+    this.a.append(this.text);
+    this.a.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.group.set_selected(this);
+    });
+
+    this.element.append(this.a);
+    this.group.add_selector(this);
+  }
+
+  set_icon(icn: Element): void {
+    this.icn.replaceWith(icn);
+    this.icn = icn;
+    this.icn.classList.add('me-2');
+  }
+
+  set_text(text: string): void { this.text.textContent = text; }
+
+  override unmounting(): void { this.group.remove_selector(this); }
+
+  select(): void {
+    this.a.classList.add('active');
+    App.get_instance().selected_component(this.selected_factory());
+  }
+  unselect(): void { this.a.classList.remove('active'); }
 }
 
 /**
