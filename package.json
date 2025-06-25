@@ -1,6 +1,6 @@
 {
   "name": "@ratiosolver/flick",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "type": "module",
   "description": "A tiny and focused UI framework designed for clarity and speed",
   "main": "dist/index.js",

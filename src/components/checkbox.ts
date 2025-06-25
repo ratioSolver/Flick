@@ -37,7 +37,7 @@ export class CheckboxComponent<P> extends Component<P, HTMLDivElement> {
       this.element.appendChild(labelElement);
     }
 
-    this.element.addEventListener('click', () => {
+    this.checkbox.addEventListener('click', () => {
       if (this.checkbox.checked)
         this.selected();
       else
