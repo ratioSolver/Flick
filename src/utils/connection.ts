@@ -8,6 +8,7 @@ export class Connection {
   private static instance: Connection;
   private socket: WebSocket | null = null;
   private connection_listeners: Set<ConnectionListener> = new Set();
+  private token: string | null = null;
 
   private constructor() {
     console.debug('localStorage available: ', typeof localStorage !== 'undefined');
@@ -23,9 +24,11 @@ export class Connection {
   /**
    * Connects to the server.
    * 
+   * @param token Optional token to use for the connection.
+   * @param remember_token Whether to remember the token.
    * @param timeout Timeout in milliseconds to wait before reconnecting.
    */
-  connect(token: string | null = null, timeout = 5000) {
+  connect(token: string | null = null, remember_token: boolean = false, timeout = 5000) {
     if (this.socket)
       this.socket.close();
 
@@ -42,8 +45,12 @@ export class Connection {
     this.socket.onmessage = (event) => {
       console.trace('Received message from server: ', event.data);
       const message = JSON.parse(event.data);
-      if (message.msg_type === 'login')
+      if (message.msg_type === 'login') {
+        this.token = token!;
+        if (remember_token)
+          localStorage.setItem('token', token!);
         for (const listener of this.connection_listeners) { listener.logged_in(message.personal_data); }
+      }
       else
         for (const listener of this.connection_listeners) { listener.received_message(message); }
     };
@@ -56,7 +63,7 @@ export class Connection {
     this.socket.onerror = (ev: Event) => {
       console.error('Connection error: ', ev);
       for (const listener of this.connection_listeners) { listener.connection_error(ev); }
-      setTimeout(() => this.connect(token, timeout), timeout);
+      setTimeout(() => this.connect(token, remember_token, timeout), timeout);
     };
   }
 
@@ -65,17 +72,15 @@ export class Connection {
    * 
    * @param username Username.
    * @param password Password.
-   * @param remember_input Whether to remember the input.
+   * @param remember_token Whether to remember the token.
    * @returns Whether the login was successful.
    */
-  async login(username: string, password: string, remember_input: boolean = false): Promise<boolean> {
+  async login(username: string, password: string, remember_token: boolean = false): Promise<boolean> {
     console.debug('Logging in user: ', username);
     const response = await fetch(Settings.get_instance().get_host() + '/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username: username, password: password }) });
     if (response.ok) { // Login successful
       const data = await response.json();
-      if (remember_input)
-        localStorage.setItem('token', data.token);
-      this.connect(data.token);
+      this.connect(data.token, remember_token);
       return true;
     } else { // Login failed
       console.error('Login failed: ', response.statusText);
@@ -90,15 +95,15 @@ export class Connection {
    * @param username Username for the new user.
    * @param password Password for the new user.
    * @param personal_data Additional user data to store.
-   * @param remember_input Whether to remember the input.
+   * @param remember_token Whether to remember the token.
    * @param token Optional token to use for the request.
    * @returns Whether the user creation was successful.
    */
-  async create_user(username: string, password: string, personal_data: Record<string, any> = {}, remember_input: boolean = true, token: string | null = null): Promise<boolean> {
+  async create_user(username: string, password: string, personal_data: Record<string, any> = {}, remember_token: boolean = true): Promise<boolean> {
     console.debug('Creating new user: ', username);
     const headers: { 'content-type': string, 'authorization'?: string } = { 'content-type': 'application/json' };
-    if (token)
-      headers['authorization'] = `Bearer ${token}`;
+    if (this.token)
+      headers['authorization'] = `Bearer ${this.token}`;
     const body: any = { username, password };
     if (Object.keys(personal_data).length > 0)
       body.user_data = personal_data;
@@ -109,9 +114,7 @@ export class Connection {
     });
     if (response.ok) { // User creation successful
       const data = await response.json();
-      if (remember_input)
-        localStorage.setItem('token', data.token);
-      this.connect(data.token);
+      this.connect(data.token, remember_token);
       return true;
     } else { // User creation failed
       console.error('User creation failed: ', response.statusText);
@@ -126,6 +129,7 @@ export class Connection {
   logout(): void {
     console.debug('Logging out user');
     this.socket!.send(JSON.stringify({ msg_type: 'logout' }));
+    this.token = null;
     localStorage.removeItem('token');
     for (const listener of this.connection_listeners) { listener.logged_out(); }
     this.socket!.close();
@@ -137,6 +141,13 @@ export class Connection {
    * @returns {boolean} `true` if the socket exists and its ready state is `WebSocket.OPEN`, otherwise `false`.
    */
   is_connected(): boolean { return this.socket !== null && this.socket.readyState === WebSocket.OPEN; }
+
+  /**
+   * Returns the current token.
+   *
+   * @returns {string | null} The current token, or `null` if not set.
+   */
+  get_token(): string | null { return this.token; }
 
   /**
    * Adds a connection listener.
