@@ -1,5 +1,6 @@
 import { App, AppListener, Component } from "../app";
 import { Connection, ConnectionListener } from "../utils/connection";
+import { BrandComponent } from "./brand";
 
 /**
  * The `NavbarComponent` class represents a navigation bar component in the application.
@@ -10,7 +11,7 @@ export class NavbarComponent extends Component<App, HTMLDivElement> {
   constructor() {
     super(App.get_instance(), document.createElement('div'));
     this.element.classList.add('collapse', 'navbar-collapse');
-    this.element.id = 'navbarNav';
+    this.element.id = 'navbarContent';
   }
 }
 
@@ -32,7 +33,7 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
    * 
    * @param {string} id The ID of the element to use as the root of the application.
    */
-  constructor(id: string = 'app') {
+  constructor(brand: BrandComponent = new BrandComponent(), id: string = 'app') {
     super(App.get_instance(), document.querySelector('#' + id) as HTMLDivElement);
     this.element.classList.add('d-flex', 'flex-column', 'h-100');
 
@@ -44,12 +45,16 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
     const nav_container = document.createElement('div');
     nav_container.classList.add('container-fluid');
 
+    // Add the brand..
+    this.add_child(brand);
+
+    // Add the toggler..
     const toggler = document.createElement('button');
     toggler.classList.add('navbar-toggler');
     toggler.type = 'button';
     toggler.setAttribute('data-bs-toggle', 'collapse');
-    toggler.setAttribute('data-bs-target', '#navbarNav');
-    toggler.setAttribute('aria-controls', 'navbarNav');
+    toggler.setAttribute('data-bs-target', '#navbarContent');
+    toggler.setAttribute('aria-controls', 'navbarContent');
     toggler.setAttribute('aria-expanded', 'false');
     toggler.setAttribute('aria-label', 'Toggle navigation');
     const toggler_span = document.createElement('span');
