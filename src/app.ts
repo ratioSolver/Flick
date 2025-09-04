@@ -1,3 +1,5 @@
+import { Component } from "./component";
+
 /**
  * The `App` class implements the singleton pattern and manages the state and behavior of the application.
  * It allows for the selection of components and notifies registered listeners of various events.
@@ -7,7 +9,7 @@
 export class App implements AppListener {
 
   private static instance: App;
-  private selected_comp: Component<any, HTMLElement> | null = null;
+  private selected_comp: Component<Node> | null = null;
   private app_listeners: Set<AppListener> = new Set();
 
   private constructor() { }
@@ -28,16 +30,16 @@ export class App implements AppListener {
   /**
    * Get the selected component.
    * 
-   * @returns {Component<any, HTMLElement> | null} The selected component.
+   * @returns {Component<Node> | null} The selected component.
    */
-  get_selected_component(): Component<any, HTMLElement> | null { return this.selected_comp; }
+  get_selected_component(): Component<Node> | null { return this.selected_comp; }
 
   /**
    * Set the selected component.
    * 
-   * @param {Component<any, HTMLElement> | null} component The component to select.
+   * @param {Component<Node> | null} component The component to select.
    */
-  selected_component(component: Component<any, HTMLElement> | null): void {
+  selected_component(component: Component<Node> | null): void {
     if (this.selected_comp)
       this.selected_comp.remove();
     this.selected_comp = component;
@@ -78,73 +80,7 @@ export interface AppListener {
   /**
    * Notification that a component has been selected.
    * 
-   * @param {Component<any, HTMLElement> | null} component The selected component.
+   * @param {Component<Node> | null} component The selected component.
    */
-  selected_component(component: Component<any, HTMLElement> | null): void;
-}
-
-/**
- * The `Component` class represents a component in the application.
- * It manages the payload and element of the component and its children.
- * 
- * @template P The type of the payload.
- * @template E The type of the element.
- */
-export abstract class Component<P, E extends HTMLElement> {
-
-  payload: P; // The payload of the component
-  element: E; // The element of the component
-  protected child_nodes: Set<Component<any, HTMLElement>> = new Set(); // The children of the component
-
-  constructor(payload: P, element: E) {
-    this.payload = payload;
-    this.element = element;
-  }
-
-  /**
-   * Add a child component.
-   * 
-   * @param {Component<any, HTMLElement>} child The child component to add.
-   */
-  add_child(child: Component<any, HTMLElement>): void {
-    this.child_nodes.add(child);
-    this.element.appendChild(child.element);
-    child.mounted();
-  }
-
-  /**
-   * Remove a child component.
-   * 
-   * @param {Component<any, HTMLElement>} child The child component to remove.
-   * @throws {Error} If the child is not found.
-   */
-  remove_child(child: Component<any, HTMLElement>): void {
-    if (this.child_nodes.has(child)) {
-      this.child_nodes.delete(child);
-      child.remove();
-    } else
-      throw new Error('Child not found');
-  }
-
-  /**
-   * Remove the component.
-   */
-  remove(): void {
-    for (const child of this.child_nodes)
-      child.unmounting();
-    this.unmounting();
-    this.element.remove();
-  }
-
-  /**
-   * Notify that the component has been mounted.
-   * Override this method to perform actions when the component is mounted.
-   */
-  mounted(): void { }
-
-  /**
-   * Notify that the component is being unmounted.
-   * Override this method to perform actions when the component is being unmounted.
-   */
-  unmounting(): void { }
+  selected_component(component: Component<Node> | null): void;
 }

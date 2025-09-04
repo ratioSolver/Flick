@@ -1,14 +1,14 @@
-import { App, Component } from "../app";
+import { Component } from "../component";
 import { Selector, SelectorGroup } from "../utils/selector";
 
-export class Sidebar extends Component<App, HTMLDivElement> {
+export class Sidebar extends Component<HTMLDivElement> {
 
   constructor(group: SelectorGroup, top: Map<HTMLAnchorElement, Selector>, bottom?: Map<HTMLAnchorElement, Selector>) {
-    super(App.get_instance(), document.createElement('div'));
+    super(document.createElement('div'));
 
-    this.element.classList.add('d-flex', 'flex-column', 'flex-shrink-0', 'p-3', 'bg-light');
-    this.element.style.width = '280px';
-    this.element.style.height = 'calc(100vh - 60px)';
+    this.node.classList.add('d-flex', 'flex-column', 'flex-shrink-0', 'p-3', 'bg-light');
+    this.node.style.width = '280px';
+    this.node.style.height = 'calc(100vh - 60px)';
 
     const ul = document.createElement('ul');
     ul.classList.add('nav', 'nav-pills', 'flex-column', 'mb-auto');
@@ -24,11 +24,11 @@ export class Sidebar extends Component<App, HTMLDivElement> {
       ul.appendChild(li);
     }
 
-    this.element.appendChild(ul);
+    this.node.appendChild(ul);
 
     if (bottom) {
       const hr = document.createElement('hr');
-      this.element.appendChild(hr);
+      this.node.appendChild(hr);
 
       const footer_ul = document.createElement('ul');
       footer_ul.classList.add('nav', 'nav-pills', 'flex-column', 'mb-0');
@@ -44,7 +44,7 @@ export class Sidebar extends Component<App, HTMLDivElement> {
         footer_ul.appendChild(li);
       }
 
-      this.element.appendChild(footer_ul);
+      this.node.appendChild(footer_ul);
     }
   }
 }

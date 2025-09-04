@@ -1,49 +1,22 @@
-import { App, AppListener, Component } from "../app";
+import { App, AppListener } from "../app";
+import { Component, Fragment } from "../component";
 import { Connection, ConnectionListener } from "../utils/connection";
-import { BrandComponent } from "./brand";
 
-/**
- * The `NavbarComponent` class represents a navigation bar component in the application.
- * It manages the payload and element of the navigation bar component.
- */
-export class NavbarComponent extends Component<App, HTMLDivElement> {
+class NavbarComponent extends Component<HTMLElement> {
 
-  constructor() {
-    super(App.get_instance(), document.createElement('div'));
-    this.element.classList.add('collapse', 'navbar-collapse');
-    this.element.id = 'navbarContent';
+  constructor(brand: BrandComponent, content: NavbarContent) {
+    super(document.createElement('nav'));
+    this.node.classList.add('navbar', 'navbar-expand-lg');
+
+    this.add_child(new NavbarContainer(brand, content));
   }
 }
 
-/**
- * The `AppComponent` class represents the main application component.
- * It manages the application element and listens to application and connection events.
- */
-export class AppComponent extends Component<App, HTMLDivElement> implements AppListener, ConnectionListener {
+class NavbarContainer extends Component<HTMLDivElement> {
 
-  /**
-   * The Navbar component of the application.
-   * 
-   * @type {NavbarComponent}
-   */
-  protected readonly navbar: NavbarComponent;
-
-  /**
-   * Create an instance of the AppComponent.
-   * 
-   * @param {string} id The ID of the element to use as the root of the application.
-   */
-  constructor(brand: BrandComponent = new BrandComponent(), id: string = 'app') {
-    super(App.get_instance(), document.querySelector('#' + id) as HTMLDivElement);
-    this.element.classList.add('d-flex', 'flex-column', 'h-100');
-
-    const fragment = document.createDocumentFragment();
-
-    // Add the Navbar..
-    const navbar = document.createElement('nav');
-    navbar.classList.add('navbar', 'navbar-expand-lg');
-    const nav_container = document.createElement('div');
-    nav_container.classList.add('container-fluid');
+  constructor(brand: BrandComponent, content: NavbarContent) {
+    super(document.createElement('div'));
+    this.node.classList.add('container-fluid');
 
     // Add the brand..
     this.add_child(brand);
@@ -60,27 +33,91 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
     const toggler_span = document.createElement('span');
     toggler_span.classList.add('navbar-toggler-icon');
     toggler.appendChild(toggler_span);
-    nav_container.appendChild(toggler);
+    this.node.appendChild(toggler);
 
-    this.navbar = new NavbarComponent();
-    nav_container.appendChild(this.navbar.element);
+    // Add the content..
+    this.add_child(content);
+  }
+}
 
-    navbar.appendChild(nav_container);
-    fragment.appendChild(navbar);
+export class BrandComponent extends Component<HTMLAnchorElement> {
 
+  /**
+   * Creates a new brand component for the navigation bar.
+   *
+   * @param name - The display name of the brand. Defaults to 'Flick'.
+   * @param icon - The source URL or path for the brand icon. Defaults to 'favicon.ico'.
+   * @param icon_width - The width of the brand icon in pixels. Defaults to 32.
+   * @param icon_height - The height of the brand icon in pixels. Defaults to 32.
+   *
+   * The constructor initializes the brand element with an icon and text,
+   * styled and aligned for use in a navigation bar.
+   */
+  constructor(name: string = 'Flick', icon: string = 'favicon.ico', icon_width: number = 32, icon_height: number = 32) {
+    super(document.createElement('a'));
+    this.node.classList.add('navbar-brand');
+    this.node.href = '#';
+
+    const brand_container = document.createElement('div');
+    brand_container.style.display = 'flex';
+    brand_container.style.alignItems = 'center';
+    brand_container.style.gap = '0.5rem'; // Add space between icon and text
+
+    const brand_icon = document.createElement('img');
+    brand_icon.src = icon;
+    brand_icon.alt = name;
+    brand_icon.width = icon_width;
+    brand_icon.height = icon_height;
+    brand_icon.classList.add('d-inline-block', 'align-text-top');
+    brand_container.appendChild(brand_icon);
+
+    if (name) {
+      brand_icon.classList.add('me-1');
+
+      const brand_text = document.createElement('span');
+      brand_text.textContent = name;
+      brand_text.style.fontWeight = '500'; // Make text slightly bolder
+
+      brand_container.appendChild(brand_text);
+    }
+
+    this.node.appendChild(brand_container);
+  }
+}
+
+export class NavbarContent extends Component<HTMLDivElement> {
+
+  constructor() {
+    super(document.createElement('div'));
+    this.node.classList.add('collapse', 'navbar-collapse');
+    this.node.id = 'navbarContent';
+  }
+}
+
+export class AppComponent extends Component<HTMLDivElement> implements AppListener, ConnectionListener {
+
+  /**
+   * Create an instance of the AppComponent.
+   * 
+   * @param {string} id The ID of the element to use as the root of the application.
+   */
+  constructor(brand: BrandComponent = new BrandComponent(), content: NavbarContent = new NavbarContent(), id: string = 'app') {
+    super(document.querySelector('#' + id) as HTMLDivElement);
+    this.node.classList.add('d-flex', 'flex-column', 'h-100');
+
+    const fragment = new Fragment();
+    fragment.add_child(new NavbarComponent(brand, content));
     // Add the toast container..
     const toast_container = document.createElement('div');
-    toast_container.classList.add('toast-container');
-    fragment.appendChild(toast_container);
-
-    this.element.appendChild(fragment);
+    fragment.node.appendChild(toast_container);
+    fragment.attach_to(this);
 
     App.get_instance().add_app_listener(this);
     Connection.get_instance().add_connection_listener(this);
   }
 
   toast(info: string): void {
-    const toast_container = this.element.querySelector('.toast-container') as HTMLDivElement;
+    const toast_container = this.node.querySelector('.toast-container') as HTMLDivElement;
     const toast = document.createElement('div');
     toast.classList.add('toast');
     toast.setAttribute('role', 'alert');
@@ -109,7 +146,7 @@ export class AppComponent extends Component<App, HTMLDivElement> implements AppL
     setTimeout(() => toast.remove(), 5000);
   }
 
-  selected_component(component: Component<any, HTMLElement> | null): void {
+  selected_component(component: Component<Node> | null): void {
     if (component)
       this.add_child(component);
   }

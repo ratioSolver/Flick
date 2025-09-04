@@ -1,7 +1,8 @@
 import { Modal } from 'bootstrap';
-import { App, Component } from '../app';
 import { ButtonComponent } from '../components/button';
 import { Connection, ConnectionListener } from './connection';
+import { Component } from '../component';
+import { App } from '../app';
 
 /**
  * Button to create a new user.
@@ -15,12 +16,12 @@ export class NewUserButton extends ButtonComponent<void> implements ConnectionLi
    */
   constructor(modal_id: string = 'newUserModal') {
     super();
-    this.element.type = 'button';
-    this.element.classList.add('btn', 'btn-primary');
-    this.element.textContent = 'New User';
-    this.element.style.marginLeft = 'auto';
-    this.element.style.display = 'inline-block';
-    this.element.addEventListener('click', () => Modal.getOrCreateInstance(document.getElementById(modal_id)!).show());
+    this.node.type = 'button';
+    this.node.classList.add('btn', 'btn-primary');
+    this.node.textContent = 'New User';
+    this.node.style.marginLeft = 'auto';
+    this.node.style.display = 'inline-block';
+    this.node.addEventListener('click', () => Modal.getOrCreateInstance(document.getElementById(modal_id)!).show());
 
     Connection.get_instance().add_connection_listener(this);
   }
@@ -28,12 +29,12 @@ export class NewUserButton extends ButtonComponent<void> implements ConnectionLi
   connected(): void { }
   logged_in(_info: any): void {
     // Hide the button if the user is already logged in
-    this.element.style.display = 'none';
+    this.node.style.display = 'none';
   }
   received_message(_message: any): void { }
   logged_out(): void {
     // Show the button if the user is logged out
-    this.element.style.display = 'inline-block';
+    this.node.style.display = 'inline-block';
   }
   disconnected(): void { }
   connection_error(_error: any): void { }
@@ -55,12 +56,12 @@ export class LogInButton extends ButtonComponent<void> implements ConnectionList
    */
   constructor(modal_id: string = 'loginModal') {
     super();
-    this.element.type = 'button';
-    this.element.classList.add('btn', 'btn-primary');
-    this.element.textContent = 'Log In';
-    this.element.style.marginLeft = '10px';
-    this.element.style.display = 'inline-block';
-    this.element.addEventListener('click', () => Modal.getOrCreateInstance(document.getElementById(modal_id)!).show());
+    this.node.type = 'button';
+    this.node.classList.add('btn', 'btn-primary');
+    this.node.textContent = 'Log In';
+    this.node.style.marginLeft = '10px';
+    this.node.style.display = 'inline-block';
+    this.node.addEventListener('click', () => Modal.getOrCreateInstance(document.getElementById(modal_id)!).show());
 
     Connection.get_instance().add_connection_listener(this);
   }
@@ -68,12 +69,12 @@ export class LogInButton extends ButtonComponent<void> implements ConnectionList
   connected(): void { }
   logged_in(_info: any): void {
     // Hide the button if the user is already logged in
-    this.element.style.display = 'none';
+    this.node.style.display = 'none';
   }
   received_message(_message: any): void { }
   logged_out(): void {
     // Show the button if the user is logged out
-    this.element.style.display = 'inline-block';
+    this.node.style.display = 'inline-block';
   }
   disconnected(): void { }
   connection_error(_error: any): void { }
@@ -93,12 +94,12 @@ export class LogOutButton extends ButtonComponent<void> implements ConnectionLis
    */
   constructor() {
     super();
-    this.element.type = 'button';
-    this.element.classList.add('btn', 'btn-primary');
-    this.element.textContent = 'Log Out';
-    this.element.addEventListener('click', () => Connection.get_instance().logout());
-    this.element.style.marginLeft = 'auto';
-    this.element.style.display = 'none';
+    this.node.type = 'button';
+    this.node.classList.add('btn', 'btn-primary');
+    this.node.textContent = 'Log Out';
+    this.node.addEventListener('click', () => Connection.get_instance().logout());
+    this.node.style.marginLeft = 'auto';
+    this.node.style.display = 'none';
 
     Connection.get_instance().add_connection_listener(this);
   }
@@ -106,12 +107,12 @@ export class LogOutButton extends ButtonComponent<void> implements ConnectionLis
   connected(): void { }
   logged_in(_info: any): void {
     // Show the button if the user is logged in
-    this.element.style.display = 'inline-block';
+    this.node.style.display = 'inline-block';
   }
   received_message(_message: any): void { }
   logged_out(): void {
     // Hide the button if the user is logged out
-    this.element.style.display = 'none';
+    this.node.style.display = 'none';
   }
   disconnected(): void { }
   connection_error(_error: any): void { }
@@ -124,7 +125,7 @@ export class LogOutButton extends ButtonComponent<void> implements ConnectionLis
 /**
  * Modal to log in.
  */
-export class LogInModal extends Component<void, HTMLDivElement> {
+export class LogInModal extends Component<HTMLDivElement> {
 
   private username_input: string = '';
   private password_input: string = '';
@@ -136,14 +137,14 @@ export class LogInModal extends Component<void, HTMLDivElement> {
   public on_hide: () => void;
 
   constructor() {
-    super(undefined, document.createElement('div'));
-    this.on_hide = () => { this.element.parentElement?.focus(); };
-    this.element.classList.add('modal', 'fade');
-    this.element.id = 'loginModal';
-    this.element.setAttribute('tabindex', '-1');
-    this.element.setAttribute('aria-labelledby', 'loginModalLabel');
-    this.element.setAttribute('aria-hidden', 'true');
-    this.element.addEventListener('hide.bs.modal', () => {
+    super(document.createElement('div'));
+    this.on_hide = () => { this.node.parentElement?.focus(); };
+    this.node.classList.add('modal', 'fade');
+    this.node.id = 'loginModal';
+    this.node.setAttribute('tabindex', '-1');
+    this.node.setAttribute('aria-labelledby', 'loginModalLabel');
+    this.node.setAttribute('aria-hidden', 'true');
+    this.node.addEventListener('hide.bs.modal', () => {
       if (this.on_hide)
         this.on_hide();
     });
@@ -266,14 +267,14 @@ export class LogInModal extends Component<void, HTMLDivElement> {
 
     dialog.appendChild(content);
 
-    this.element.appendChild(dialog);
+    this.node.appendChild(dialog);
   }
 
   private login(): void {
     Connection.get_instance().login(this.username_input, this.password_input, this.remember_input)
       .then((result: boolean) => {
         if (result)
-          Modal.getOrCreateInstance(this.element).hide();
+          Modal.getOrCreateInstance(this.node).hide();
       });
   }
 }
@@ -281,7 +282,7 @@ export class LogInModal extends Component<void, HTMLDivElement> {
 /**
  * Modal to create a new user.
  */
-export class NewUserModal extends Component<void, HTMLDivElement> {
+export class NewUserModal extends Component<HTMLDivElement> {
 
   private username_input: string = '';
   private password_input: string = '';
@@ -293,14 +294,14 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
   public on_hide: () => void;
 
   constructor() {
-    super(undefined, document.createElement('div'));
-    this.on_hide = () => { this.element.parentElement?.focus(); };
-    this.element.classList.add('modal', 'fade');
-    this.element.id = 'newUserModal';
-    this.element.setAttribute('tabindex', '-1');
-    this.element.setAttribute('aria-labelledby', 'newUserModalLabel');
-    this.element.setAttribute('aria-hidden', 'true');
-    this.element.addEventListener('hide.bs.modal', () => {
+    super(document.createElement('div'));
+    this.on_hide = () => { this.node.parentElement?.focus(); };
+    this.node.classList.add('modal', 'fade');
+    this.node.id = 'newUserModal';
+    this.node.setAttribute('tabindex', '-1');
+    this.node.setAttribute('aria-labelledby', 'newUserModalLabel');
+    this.node.setAttribute('aria-hidden', 'true');
+    this.node.addEventListener('hide.bs.modal', () => {
       if (this.on_hide)
         this.on_hide();
     });
@@ -424,7 +425,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
 
     dialog.appendChild(content);
 
-    this.element.appendChild(dialog);
+    this.node.appendChild(dialog);
   }
 
   private create_user(): void {
@@ -435,7 +436,7 @@ export class NewUserModal extends Component<void, HTMLDivElement> {
     Connection.get_instance().create_user(this.username_input, this.password_input)
       .then((result: boolean) => {
         if (result)
-          Modal.getOrCreateInstance(this.element).hide();
+          Modal.getOrCreateInstance(this.node).hide();
       });
   }
 }

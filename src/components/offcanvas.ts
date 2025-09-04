@@ -1,14 +1,14 @@
-import { App, Component } from "../app";
+import { Component } from "../component";
 import { Selector, SelectorGroup } from "../utils/selector";
 
-export class Offcanvas extends Component<App, HTMLDivElement> {
+export class Offcanvas extends Component<HTMLDivElement> {
 
   constructor(id: string, group: SelectorGroup, top: Map<HTMLAnchorElement, Selector>, bottom?: Map<HTMLAnchorElement, Selector>) {
-    super(App.get_instance(), document.createElement('div'));
+    super(document.createElement('div'));
 
-    this.element.classList.add('offcanvas', 'offcanvas-start', 'd-flex');
-    this.element.tabIndex = -1;
-    this.element.id = id;
+    this.node.classList.add('offcanvas', 'offcanvas-start', 'd-flex');
+    this.node.tabIndex = -1;
+    this.node.id = id;
 
     const body = document.createElement('div');
     body.classList.add('offcanvas-body', 'flex-column', 'flex-shrink-0', 'p-3', 'bg-light');
@@ -50,6 +50,6 @@ export class Offcanvas extends Component<App, HTMLDivElement> {
       body.appendChild(footer_ul);
     }
 
-    this.element.append(body);
+    this.node.append(body);
   }
 }

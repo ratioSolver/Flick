@@ -1,42 +1,33 @@
-import { App, Component } from "../app";
+import { Component, Fragment, PayloadComponent } from "../component";
 import { Selector, SelectorGroup } from "../utils/selector";
 
-/**
- * The `ListComponent` class represents a list component in the application.
- * It manages the payload and element of the list component and its children.
- * 
- * @template P The type of the payload.
- * @template E The type of the element.
- * @template L The type of the list element.
- */
-export abstract class ListComponent<P, E extends HTMLElement, L extends HTMLElement> extends Component<Component<P, E>[], L> {
+export abstract class ListComponent<L extends HTMLElement, P> extends Component<L> {
 
+  children: PayloadComponent<Node, P>[] = []; // The children of the list component sorted by the comparison function
   compareFn: (a: P, b: P) => number; // The comparison function
-  children: Component<P, E>[] = []; // The children of the list component sorted by the comparison function
 
-  constructor(payload: Component<P, E>[], element: L, compareFn?: (a: P, b: P) => number) {
-    super(payload, element)
-    this.compareFn = compareFn || ((_a: P, _b: P) => 0);
-    this.children = payload;
+  constructor(node: L, children: PayloadComponent<Node, P>[], compareFn: (a: P, b: P) => number = ((_a: P, _b: P) => 0)) {
+    super(node);
+    this.children = children;
+    this.compareFn = compareFn;
     this.children.sort((a, b) => this.compareFn(a.payload, b.payload));
-    const fragment = document.createDocumentFragment();
+    const fragment = new Fragment();
     for (const child of this.children)
-      fragment.appendChild(child.element);
-    this.element.appendChild(fragment);
+      fragment.add_child(child);
+    fragment.attach_to(this);
   }
 
-  override add_child(child: Component<P, E>): void {
-    super.add_child(child);
+  override add_child(child: PayloadComponent<Node, P>): void {
     this.children.push(child);
     this.children.sort((a, b) => this.compareFn(a.payload, b.payload));
     const index = this.children.indexOf(child);
     if (index === this.children.length - 1)
-      this.element.appendChild(child.element);
+      this.add_child(child);
     else
-      this.element.insertBefore(child.element, this.children[index + 1].element);
+      this.add_child_before(child, this.children[index + 1].node);
   }
 
-  override remove_child(child: Component<P, E>): void {
+  override remove_child(child: PayloadComponent<Node, P>): void {
     const index = this.children.indexOf(child);
     if (index !== -1) {
       this.children.splice(index, 1);
@@ -46,32 +37,33 @@ export abstract class ListComponent<P, E extends HTMLElement, L extends HTMLElem
   }
 }
 
-/**
- * The `UListComponent` class represents an unordered list component in the application.
- * It manages the payload and element of the unordered list component and its children.
- *
- * @template P The type of the payload.
- */
-export class UListComponent<P> extends ListComponent<P, HTMLLIElement, HTMLUListElement> {
+export class UListComponent<P> extends ListComponent<HTMLUListElement, P> {
 
-  constructor(payload: Component<P, HTMLLIElement>[], compareFn?: (a: P, b: P) => number) {
-    super(payload, document.createElement('ul'), compareFn);
+  constructor(payload: PayloadComponent<HTMLLIElement, P>[], compareFn?: (a: P, b: P) => number) {
+    super(document.createElement('ul'), payload, compareFn);
   }
 }
 
-/**
- * The `UListElement` class represents an element in an unordered list component.
- * It manages the payload, icon, and text of the list item.
- *
- * @template P The type of the payload.
- */
-export class UListElement<P> extends Component<P, HTMLLIElement> implements Selector {
+export class OListComponent<P> extends ListComponent<HTMLOListElement, P> {
+
+  constructor(payload: PayloadComponent<HTMLLIElement, P>[], compareFn?: (a: P, b: P) => number) {
+    super(document.createElement('ol'), payload, compareFn);
+  }
+}
+
+export class DivListComponent<P> extends ListComponent<HTMLDivElement, P> {
+
+  constructor(payload: PayloadComponent<HTMLDivElement, P>[], compareFn?: (a: P, b: P) => number) {
+    super(document.createElement('div'), payload, compareFn);
+  }
+}
+
+export class ListItemComponent<P> extends PayloadComponent<HTMLLIElement, P> implements Selector {
 
   private readonly group: SelectorGroup;
   private readonly a: HTMLAnchorElement;
   private icn: Element;
   private text: Text;
-  private readonly selected_factory: () => Component<P, HTMLElement>;
 
   /**
    * Creates an instance of UListElement.
@@ -80,13 +72,11 @@ export class UListElement<P> extends Component<P, HTMLLIElement> implements Sele
    * @param payload The payload associated with this element.
    * @param icn The icon element to be displayed in the list item.
    * @param text The text content of the list item.
-   * @param selected_factory A factory function that returns the selected component when this element is selected.
    */
-  constructor(group: SelectorGroup, payload: P, icn: Element, text: string, selected_factory: () => Component<P, HTMLElement>) {
-    super(payload, document.createElement('li'));
+  constructor(group: SelectorGroup, payload: P, icn: Element, text: string) {
+    super(document.createElement('li'), payload);
     this.group = group;
-    this.selected_factory = selected_factory;
-    this.element.classList.add('nav-item', 'list-group-item');
+    this.node.classList.add('nav-item', 'list-group-item');
 
     this.a = document.createElement('a');
     this.a.classList.add('nav-link', 'd-flex', 'align-items-center');
@@ -101,7 +91,7 @@ export class UListElement<P> extends Component<P, HTMLLIElement> implements Sele
       this.group.set_selected(this);
     });
 
-    this.element.append(this.a);
+    this.node.append(this.a);
     this.group.add_selector(this);
   }
 
@@ -115,22 +105,6 @@ export class UListElement<P> extends Component<P, HTMLLIElement> implements Sele
 
   override unmounting(): void { this.group.remove_selector(this); }
 
-  select(): void {
-    this.a.classList.add('active');
-    App.get_instance().selected_component(this.selected_factory());
-  }
+  select(): void { this.a.classList.add('active'); }
   unselect(): void { this.a.classList.remove('active'); }
-}
-
-/**
- * The `DivList` class represents a list component in the application that uses `div` elements.
- * It manages the payload and element of the list component and its children.
- *
- * @template P The type of the payload.
- */
-export class DivList<P> extends ListComponent<P, HTMLDivElement, HTMLDivElement> {
-
-  constructor(payload: Component<P, HTMLDivElement>[], compareFn?: (a: P, b: P) => number) {
-    super(payload, document.createElement('div'), compareFn);
-  }
 }
