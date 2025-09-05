@@ -1,4 +1,4 @@
-import { Collapse, Offcanvas } from "bootstrap";
+import { Collapse } from "bootstrap";
 import { App, AppListener } from "../app";
 import { Component, Fragment } from "../component";
 import { Connection, ConnectionListener } from "../utils/connection";
@@ -53,28 +53,17 @@ export class BrandComponent extends Component<HTMLAnchorElement> {
    * @param icon - The source URL or path for the brand icon. Defaults to 'favicon.ico'.
    * @param icon_width - The width of the brand icon in pixels. Defaults to 32.
    * @param icon_height - The height of the brand icon in pixels. Defaults to 32.
-   * @param offcanvas_id - Optional ID of an offcanvas element to toggle when the brand is clicked.
    *
    * The constructor initializes the brand element with an icon and text,
    * styled and aligned for use in a navigation bar.
    */
-  constructor(name: string = 'Flick', icon: string = 'favicon.ico', icon_width: number = 32, icon_height: number = 32, offcanvas_id?: string) {
+  constructor(name: string = 'Flick', icon: string = 'favicon.ico', icon_width: number = 32, icon_height: number = 32) {
     super(document.createElement('a'));
     this.node.classList.add('navbar-brand', 'd-flex', 'align-items-center', 'gap-2');
-    if (offcanvas_id) {
-      this.node.setAttribute('href', `#${offcanvas_id}`);
-      this.node.setAttribute('role', 'button');
-      this.node.setAttribute('aria-controls', offcanvas_id);
-      this.node.addEventListener('click', (event) => {
-        event.preventDefault();
-        Offcanvas.getOrCreateInstance(offcanvas_id).toggle();
-      });
-    }
 
-    const brand_container = document.createElement('div');
-    brand_container.style.display = 'flex';
-    brand_container.style.alignItems = 'center';
-    brand_container.style.gap = '0.5rem'; // Add space between icon and text
+    this.node.style.display = 'flex';
+    this.node.style.alignItems = 'center';
+    this.node.style.gap = '0.5rem'; // Add space between icon and text
 
     const brand_icon = document.createElement('img');
     brand_icon.src = icon;
@@ -82,7 +71,7 @@ export class BrandComponent extends Component<HTMLAnchorElement> {
     brand_icon.width = icon_width;
     brand_icon.height = icon_height;
     brand_icon.classList.add('d-inline-block', 'align-text-top');
-    brand_container.appendChild(brand_icon);
+    this.node.appendChild(brand_icon);
 
     if (name) {
       brand_icon.classList.add('me-1');
@@ -91,10 +80,8 @@ export class BrandComponent extends Component<HTMLAnchorElement> {
       brand_text.textContent = name;
       brand_text.style.fontWeight = '500'; // Make text slightly bolder
 
-      brand_container.appendChild(brand_text);
+      this.node.appendChild(brand_text);
     }
-
-    this.node.appendChild(brand_container);
   }
 }
 
@@ -120,8 +107,10 @@ export class AppComponent extends Component<HTMLDivElement> implements AppListen
 
     const fragment = new Fragment();
     fragment.add_child(new NavbarComponent(brand, content));
+
     // Add the toast container..
     const toast_container = document.createElement('div');
+    toast_container.classList.add('toast-container', 'position-fixed', 'bottom-0', 'end-0', 'p-3');
     fragment.node.appendChild(toast_container);
     fragment.attach_to(this);
 
