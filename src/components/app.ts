@@ -8,7 +8,6 @@ class NavbarComponent extends Component<HTMLElement> {
   constructor(brand: BrandComponent, content: NavbarContent) {
     super(document.createElement('nav'));
     this.node.classList.add('navbar', 'navbar-expand-lg');
-    new Collapse(this.node, { toggle: false });
 
     this.add_child(new NavbarContainer(brand, content));
   }
@@ -100,6 +99,7 @@ export class NavbarContent extends Component<HTMLDivElement> {
     super(document.createElement('div'));
     this.node.classList.add('collapse', 'navbar-collapse');
     this.node.id = 'navbarContent';
+    new Collapse(this.node, { toggle: false });
   }
 }
 
