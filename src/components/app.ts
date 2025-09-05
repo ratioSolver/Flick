@@ -1,4 +1,4 @@
-import { Collapse, Offcanvas } from "bootstrap";
+import { Collapse } from "bootstrap";
 import { App, AppListener } from "../app";
 import { Component, Fragment } from "../component";
 import { Connection, ConnectionListener } from "../utils/connection";
@@ -38,6 +38,8 @@ class NavbarContainer extends Component<HTMLDivElement> {
 
     // Add the content..
     this.add_child(content);
+
+    toggler.addEventListener('click', () => { Collapse.getInstance(content.node)!.toggle(); });
   }
 }
 
@@ -63,7 +65,6 @@ export class BrandComponent extends Component<HTMLAnchorElement> {
       this.node.setAttribute('href', `#${offcanvas_id}`);
       this.node.setAttribute('role', 'button');
       this.node.setAttribute('aria-controls', offcanvas_id);
-      new Offcanvas(this.node, { backdrop: true });
     }
 
     const brand_container = document.createElement('div');
@@ -99,7 +100,6 @@ export class NavbarContent extends Component<HTMLDivElement> {
     super(document.createElement('div'));
     this.node.classList.add('collapse', 'navbar-collapse');
     this.node.id = 'navbarContent';
-    new Collapse(this.node, { toggle: false });
   }
 }
 
