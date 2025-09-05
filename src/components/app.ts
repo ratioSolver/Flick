@@ -1,4 +1,4 @@
-import { Collapse } from "bootstrap";
+import { Collapse, Offcanvas } from "bootstrap";
 import { App, AppListener } from "../app";
 import { Component, Fragment } from "../component";
 import { Connection, ConnectionListener } from "../utils/connection";
@@ -26,8 +26,6 @@ class NavbarContainer extends Component<HTMLDivElement> {
     const toggler = document.createElement('button');
     toggler.classList.add('navbar-toggler');
     toggler.type = 'button';
-    toggler.setAttribute('data-bs-toggle', 'collapse');
-    toggler.setAttribute('data-bs-target', '#navbarContent');
     toggler.setAttribute('aria-controls', 'navbarContent');
     toggler.setAttribute('aria-expanded', 'false');
     toggler.setAttribute('aria-label', 'Toggle navigation');
@@ -39,7 +37,10 @@ class NavbarContainer extends Component<HTMLDivElement> {
     // Add the content..
     this.add_child(content);
 
-    toggler.addEventListener('click', () => { Collapse.getInstance(content.node)!.toggle(); });
+    toggler.addEventListener('click', (event) => {
+      event.preventDefault();
+      Collapse.getOrCreateInstance(content.node).toggle();
+    });
   }
 }
 
@@ -61,10 +62,13 @@ export class BrandComponent extends Component<HTMLAnchorElement> {
     super(document.createElement('a'));
     this.node.classList.add('navbar-brand', 'd-flex', 'align-items-center', 'gap-2');
     if (offcanvas_id) {
-      this.node.setAttribute('data-bs-toggle', 'offcanvas');
       this.node.setAttribute('href', `#${offcanvas_id}`);
       this.node.setAttribute('role', 'button');
       this.node.setAttribute('aria-controls', offcanvas_id);
+      this.node.addEventListener('click', (event) => {
+        event.preventDefault();
+        Offcanvas.getOrCreateInstance(offcanvas_id).toggle();
+      });
     }
 
     const brand_container = document.createElement('div');
