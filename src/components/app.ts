@@ -49,14 +49,20 @@ export class BrandComponent extends Component<HTMLAnchorElement> {
    * @param icon - The source URL or path for the brand icon. Defaults to 'favicon.ico'.
    * @param icon_width - The width of the brand icon in pixels. Defaults to 32.
    * @param icon_height - The height of the brand icon in pixels. Defaults to 32.
+   * @param offcanvas_id - Optional ID of an offcanvas element to toggle when the brand is clicked.
    *
    * The constructor initializes the brand element with an icon and text,
    * styled and aligned for use in a navigation bar.
    */
-  constructor(name: string = 'Flick', icon: string = 'favicon.ico', icon_width: number = 32, icon_height: number = 32) {
+  constructor(name: string = 'Flick', icon: string = 'favicon.ico', icon_width: number = 32, icon_height: number = 32, offcanvas_id?: string) {
     super(document.createElement('a'));
-    this.node.classList.add('navbar-brand');
-    this.node.href = '#';
+    this.node.classList.add('navbar-brand', 'd-flex', 'align-items-center', 'gap-2');
+    if (offcanvas_id) {
+      this.node.setAttribute('data-bs-toggle', 'offcanvas');
+      this.node.setAttribute('href', `#${offcanvas_id}`);
+      this.node.setAttribute('role', 'button');
+      this.node.setAttribute('aria-controls', offcanvas_id);
+    }
 
     const brand_container = document.createElement('div');
     brand_container.style.display = 'flex';
