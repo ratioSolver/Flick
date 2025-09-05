@@ -22,9 +22,9 @@ export abstract class ListComponent<L extends HTMLElement, P> extends Component<
     this.children.sort((a, b) => this.compareFn(a.payload, b.payload));
     const index = this.children.indexOf(child);
     if (index === this.children.length - 1)
-      this.add_child(child);
+      super.add_child(child);
     else
-      this.add_child_before(child, this.children[index + 1].node);
+      super.add_child_before(child, this.children[index + 1].node);
   }
 
   override remove_child(child: PayloadComponent<Node, P>): void {
