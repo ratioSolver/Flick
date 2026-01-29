@@ -13,6 +13,25 @@ export function ListGroupItem(content: VNodeChildren, onClick?: () => void, acti
   }, content);
 }
 
+export function ListGroupCheckbox(text: string, checked: boolean = false, onToggle?: (checked: boolean) => void, disabled: boolean = false): VNode {
+  return h('label.list-group-item', {
+    class: { 'disabled': disabled }
+  }, [
+    h('input.form-check-input.me-2', {
+      props: {
+        type: 'checkbox',
+        checked: checked,
+        disabled: disabled,
+        value: ''
+      },
+      on: {
+        change: (event: Event) => onToggle && onToggle((event.target as HTMLInputElement).checked)
+      }
+    }),
+    text
+  ]);
+}
+
 export function ListGroup(items: VNodeChildren[]): VNode {
   return h('div.list-group.list-group-flush', items);
 }

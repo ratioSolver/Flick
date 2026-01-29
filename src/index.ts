@@ -7,3 +7,4 @@ export * from './components/app';
 export * from './components/button';
 export * from './components/list';
 export * from './components/offcanvas';
+export * from './components/table';
