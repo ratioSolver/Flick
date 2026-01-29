@@ -1,10 +1,11 @@
 import { init, classModule, propsModule, styleModule, eventListenersModule, type VNode } from "snabbdom";
+import { App } from "./components/app";
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
-type Component = () => VNode;
+export type Component = () => VNode;
 
-export function flick(containerId: string, rootComponent: Component) {
+export function flick(containerId: string = 'app', rootComponent: Component = App) {
     let oldVnode: VNode | Element = document.getElementById(containerId)!;
 
     // This is the actual function we call whenever state changes
