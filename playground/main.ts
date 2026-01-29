@@ -11,7 +11,7 @@ enum Pages {
 
 let currentPage: Pages = Pages.Dashboard;
 
-const rerender = flick('app', () => {
+flick.mount(() => {
   const navbar = Navbar(OffcanvasBrand('Flick'), NavbarList([
     NavbarItem('Home', '#home', true),
     NavbarItem('About', '#about'),
@@ -19,10 +19,10 @@ const rerender = flick('app', () => {
   ]));
 
   const offcanvas_content = ListGroup([
-    ListGroupItem('Dashboard', () => { currentPage = Pages.Dashboard; rerender(); }, currentPage === Pages.Dashboard),
-    ListGroupItem('Settings', () => { currentPage = Pages.Settings; rerender(); }, currentPage === Pages.Settings),
-    ListGroupItem('Profile', () => { currentPage = Pages.Profile; rerender(); }, currentPage === Pages.Profile),
-    ListGroupItem('Help', () => { currentPage = Pages.Help; rerender(); }, currentPage === Pages.Help)
+    ListGroupItem('Dashboard', () => { currentPage = Pages.Dashboard; flick.redraw(); }, currentPage === Pages.Dashboard),
+    ListGroupItem('Settings', () => { currentPage = Pages.Settings; flick.redraw(); }, currentPage === Pages.Settings),
+    ListGroupItem('Profile', () => { currentPage = Pages.Profile; flick.redraw(); }, currentPage === Pages.Profile),
+    ListGroupItem('Help', () => { currentPage = Pages.Help; flick.redraw(); }, currentPage === Pages.Help)
   ]);
 
   const content = h('div.container.mt-4', [
@@ -36,5 +36,3 @@ const rerender = flick('app', () => {
 
   return App(navbar, content);
 });
-
-rerender();
