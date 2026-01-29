@@ -1,4 +1,4 @@
-import { h, VNode } from "snabbdom";
+import { h, VNode } from 'snabbdom';
 
 export function Brand(name: string, href: string = '#'): VNode {
   return h('a.navbar-brand', { props: { href } }, name);

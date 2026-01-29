@@ -1,5 +1,5 @@
-import { init, classModule, propsModule, styleModule, eventListenersModule, type VNode } from "snabbdom";
-import { App } from "./components/app";
+import { init, classModule, propsModule, styleModule, eventListenersModule, type VNode } from 'snabbdom';
+import { App } from './components/app';
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 

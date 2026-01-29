@@ -1,5 +1,29 @@
-import { h, VNode } from "snabbdom";
+import { h, VNode } from 'snabbdom';
 
-export function Offcanvas(id: string, content: VNode): VNode {
-  return h("div", { attrs: { id, class: "offcanvas" } }, [content]);
+export function OffcanvasHeader(id: string, title: string): VNode {
+  return h('div.offcanvas-header', [
+    h('h5.offcanvas-title', { props: { id: `${id}Label` } }, title),
+    h('button.btn-close', {
+      props: {
+        'data-bs-dismiss': 'offcanvas',
+        'aria-label': 'Close'
+      }
+    })
+  ]);
+}
+
+export function OffcanvasBody(content: VNode): VNode {
+  return h('div.offcanvas-body', [content]);
+}
+
+export function Offcanvas(id: string, header: VNode, body: VNode): VNode {
+  return h(`div#${id}.offcanvas.offcanvas-start`, {
+    props: {
+      tabindex: -1,
+      'aria-labelledby': `${id}Label`
+    }
+  }, [
+    header,
+    body
+  ]);
 }
