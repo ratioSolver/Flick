@@ -43,7 +43,7 @@ export function NavbarList(items: VNodeChildren[]): VNode {
   return h('ul.navbar-nav.me-auto.mb-2.mb-lg-0', items);
 }
 
-export function Navbar(brand: VNodeChildren = Brand('Flick'), navbar_content: VNodeChildren = h('!'), id = 'navbarSupportedContent'): VNode {
+export function Navbar(brand: VNodeChildren = Brand('Flick'), navbar_content?: VNodeChildren, id = 'navbarSupportedContent'): VNode {
   return h('nav.navbar.navbar-expand-lg.bg-body-tertiary', [
     h('div.container-fluid', [
       brand,
@@ -66,7 +66,7 @@ export function Navbar(brand: VNodeChildren = Brand('Flick'), navbar_content: VN
   ]);
 }
 
-export function App(navbar: VNodeChildren = Navbar(), content: VNodeChildren = h('!')): VNode {
+export function App(navbar: VNodeChildren = Navbar(), content?: VNodeChildren): VNode {
   return h('div', [
     navbar,
     content

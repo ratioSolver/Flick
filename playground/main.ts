@@ -1,6 +1,6 @@
 import { h } from 'snabbdom';
 import { App, Navbar, NavbarItem, NavbarList, OffcanvasBrand } from '../src/components/app';
-import { Button, flick, ListGroup, ListGroupCheckbox, ListGroupItem, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Table } from '../src/index';
+import { Button, flick, ListGroup, ListGroupCheckbox, ListGroupItem, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Table, Toast, ToastContainer } from '../src/index';
 
 enum Pages {
   Dashboard,
@@ -62,7 +62,10 @@ flick.mount(() => {
     Offcanvas(
       OffcanvasBody(offcanvas_content),
       OffcanvasHeader('Flick Offcanvas')
-    )
+    ),
+    ToastContainer([Toast('sampleToast', 'alert', 'This is a sample toast message!', 'Notification', true, () => {
+      console.log('Toast closed');
+    })])
   ]);
 
   return App(navbar, content);

@@ -8,3 +8,4 @@ export * from './components/button';
 export * from './components/list';
 export * from './components/offcanvas';
 export * from './components/table';
+export * from './components/toast';
