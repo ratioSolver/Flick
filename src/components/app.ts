@@ -1,4 +1,4 @@
-import { h, VNode } from 'snabbdom';
+import { h, VNode, VNodeChildren } from 'snabbdom';
 
 export function Brand(name: string, href?: string): VNode {
   return h('a.navbar-brand', href ? { props: { href } } : {}, name);
@@ -39,11 +39,11 @@ export function NavbarItem(text: string, href: string, active: boolean = false):
   ]);
 }
 
-export function NavbarList(items: VNode[]): VNode {
+export function NavbarList(items: VNodeChildren[]): VNode {
   return h('ul.navbar-nav.me-auto.mb-2.mb-lg-0', items);
 }
 
-export function Navbar(brand: VNode = Brand('Flick'), navbar_content: VNode = h('!'), id = 'navbarSupportedContent'): VNode {
+export function Navbar(brand: VNodeChildren = Brand('Flick'), navbar_content: VNodeChildren = h('!'), id = 'navbarSupportedContent'): VNode {
   return h('nav.navbar.navbar-expand-lg.bg-body-tertiary', [
     h('div.container-fluid', [
       brand,
@@ -66,7 +66,7 @@ export function Navbar(brand: VNode = Brand('Flick'), navbar_content: VNode = h(
   ]);
 }
 
-export function App(navbar: VNode = Navbar(), content: VNode = h('!')): VNode {
+export function App(navbar: VNodeChildren = Navbar(), content: VNodeChildren = h('!')): VNode {
   return h('div', [
     navbar,
     content

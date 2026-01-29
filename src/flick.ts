@@ -5,11 +5,11 @@ const patch = init([classModule, propsModule, styleModule, eventListenersModule,
 
 export type Component = () => VNode;
 
-export function flick(containerId: string = 'app', rootComponent: VNode = App()): () => void {
-    let oldVnode: VNode | Element = document.getElementById(containerId)!;
+export function flick(container_id: string = 'app', rootComponent: Component = () => App()): () => void {
+    let oldVnode: VNode | Element = document.getElementById(container_id)!;
 
     // This is the actual function we call whenever state changes
     return function rerender() {
-        oldVnode = patch(oldVnode, rootComponent);
+        oldVnode = patch(oldVnode, rootComponent());
     };
 }

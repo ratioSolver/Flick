@@ -1,4 +1,4 @@
-import { h, VNode } from 'snabbdom';
+import { h, VNode, VNodeChildren } from 'snabbdom';
 
 export function OffcanvasHeader(title: string, id: string = 'offcanvasNavbar'): VNode {
   return h('div.offcanvas-header', [
@@ -12,7 +12,7 @@ export function OffcanvasHeader(title: string, id: string = 'offcanvasNavbar'): 
   ]);
 }
 
-export function OffcanvasBody(content: VNode): VNode {
+export function OffcanvasBody(content: VNodeChildren): VNode {
   return h('div.offcanvas-body', content);
 }
 
