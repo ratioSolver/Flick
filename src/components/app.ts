@@ -1,7 +1,19 @@
 import { h, VNode } from 'snabbdom';
 
-export function Brand(name: string, href: string = '#'): VNode {
-  return h('a.navbar-brand', { props: { href } }, name);
+export function Brand(name: string, href?: string): VNode {
+  return h('a.navbar-brand', href ? { props: { href } } : {}, name);
+}
+
+export function OffcanvasBrand(name: string, id: string = 'offcanvasNavbar'): VNode {
+  return h('a.navbar-brand', {
+    props: {
+      href: `#${id}`
+    },
+    attrs: {
+      'data-bs-toggle': 'offcanvas',
+      'aria-controls': id
+    }
+  }, name);
 }
 
 export function IconBrand(icon: string, width: number = 30, height: number = 30, name?: string, href: string = '#'): VNode {
@@ -18,7 +30,7 @@ export function IconBrand(icon: string, width: number = 30, height: number = 30,
   ]);
 }
 
-export function NavbarItem(text: string, href: string = '#', active: boolean = false): VNode {
+export function NavbarItem(text: string, href: string, active: boolean = false): VNode {
   return h('li.nav-item', [
     h('a.nav-link', {
       class: { active },
@@ -31,13 +43,15 @@ export function NavbarList(items: VNode[]): VNode {
   return h('ul.navbar-nav.me-auto.mb-2.mb-lg-0', items);
 }
 
-function Navbar(brand: VNode, navbar_content: VNode, id = 'navbarSupportedContent'): VNode {
+export function Navbar(brand: VNode = Brand('Flick'), navbar_content: VNode = h('!'), id = 'navbarSupportedContent'): VNode {
   return h('nav.navbar.navbar-expand-lg.bg-body-tertiary', [
     h('div.container-fluid', [
       brand,
       h('button.navbar-toggler', {
         props: {
-          type: 'button',
+          type: 'button'
+        },
+        attrs: {
           'data-bs-toggle': 'collapse',
           'data-bs-target': `#${id}`,
           'aria-controls': id,
@@ -52,8 +66,8 @@ function Navbar(brand: VNode, navbar_content: VNode, id = 'navbarSupportedConten
   ]);
 }
 
-export function App(brand: VNode = Brand('Flick'), navbar_content: VNode = h('!')): VNode {
+export function App(navbar: VNode = Navbar()): VNode {
   return h('div', [
-    Navbar(brand, navbar_content),
+    navbar
   ]);
 }

@@ -1,7 +1,7 @@
-import { init, classModule, propsModule, styleModule, eventListenersModule, type VNode } from 'snabbdom';
+import { init, classModule, propsModule, styleModule, eventListenersModule, attributesModule, type VNode } from 'snabbdom';
 import { App } from './components/app';
 
-const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
+const patch = init([classModule, propsModule, styleModule, eventListenersModule, attributesModule]);
 
 export type Component = () => VNode;
 
