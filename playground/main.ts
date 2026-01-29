@@ -19,10 +19,22 @@ flick.mount(() => {
   ]));
 
   const offcanvas_content = ListGroup([
-    ListGroupItem('Dashboard', () => { currentPage = Pages.Dashboard; flick.redraw(); }, currentPage === Pages.Dashboard),
-    ListGroupItem('Settings', () => { currentPage = Pages.Settings; flick.redraw(); }, currentPage === Pages.Settings),
-    ListGroupItem('Profile', () => { currentPage = Pages.Profile; flick.redraw(); }, currentPage === Pages.Profile),
-    ListGroupItem('Help', () => { currentPage = Pages.Help; flick.redraw(); }, currentPage === Pages.Help)
+    ListGroupItem('Dashboard', () => {
+      currentPage = Pages.Dashboard;
+      flick.redraw();
+    }, currentPage === Pages.Dashboard),
+    ListGroupItem('Settings', () => {
+      currentPage = Pages.Settings;
+      flick.redraw();
+    }, currentPage === Pages.Settings),
+    ListGroupItem('Profile', () => {
+      currentPage = Pages.Profile;
+      flick.redraw();
+    }, currentPage === Pages.Profile),
+    ListGroupItem('Help', () => {
+      currentPage = Pages.Help;
+      flick.redraw();
+    }, currentPage === Pages.Help)
   ]);
 
   const content = h('div.container.mt-4', [
