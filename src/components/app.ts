@@ -1,13 +1,26 @@
 import { h, VNode } from "snabbdom";
-import { Component } from "../flick";
 
 export function Brand(name: string): VNode {
-  return h('span', name);
+  return h('a.navbar-brand.ps-4', { props: { href: '#' } }, name);
 }
 
-function Navbar(brand: Component, content: Component): VNode {
+export function IconBrand(icon: string, width: number = 30, height: number = 30, name?: string): VNode {
+  return h('a.navbar-brand.ps-4', { props: { href: '#' } }, [
+    h('img.d-inline-block.align-text-top', {
+      props: {
+        src: icon,
+        width: width,
+        height: height,
+        alt: name || 'Brand Icon'
+      }
+    }),
+    name ? ` ${name}` : ''
+  ]);
+}
+
+function Navbar(brand: VNode, content: VNode): VNode {
   return h('nav.navbar.navbar-expand-lg.navbar-light.bg-light', [
-    h('a.navbar-brand.ps-4', { props: { href: '#' } }, [brand()]),
+    brand,
     h('button.navbar-toggler.me-3', {
       props: {
         type: 'button',
@@ -20,13 +33,11 @@ function Navbar(brand: Component, content: Component): VNode {
     }, [
       h('span.navbar-toggler-icon')
     ]),
-    h('div#navbarSupportedContent.collapse.navbar-collapse', [
-      content()
-    ])
+    h('div#navbarSupportedContent.collapse.navbar-collapse', [content])
   ]);
 }
 
-export function App(brand: Component = () => Brand('Flick'), content: Component = () => h('div')): VNode {
+export function App(brand: VNode = Brand('Flick'), content: VNode = h('!')): VNode {
   return h('div', [
     Navbar(brand, content),
   ]);
