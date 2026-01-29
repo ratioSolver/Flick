@@ -1,6 +1,6 @@
 import { h, VNode } from 'snabbdom';
 
-export function OffcanvasHeader(id: string, title: string): VNode {
+export function OffcanvasHeader(title: string, id: string = 'offcanvasNavbar'): VNode {
   return h('div.offcanvas-header', [
     h('h5.offcanvas-title', { props: { id: `${id}Label` } }, title),
     h('button.btn-close', {
@@ -13,10 +13,10 @@ export function OffcanvasHeader(id: string, title: string): VNode {
 }
 
 export function OffcanvasBody(content: VNode): VNode {
-  return h('div.offcanvas-body', [content]);
+  return h('div.offcanvas-body', content);
 }
 
-export function Offcanvas(id: string, header: VNode, body: VNode): VNode {
+export function Offcanvas(body: VNode, header: VNode = h('!'), id: string = 'offcanvasNavbar'): VNode {
   return h(`div#${id}.offcanvas.offcanvas-start`, {
     props: {
       tabindex: -1

@@ -61,13 +61,14 @@ export function Navbar(brand: VNode = Brand('Flick'), navbar_content: VNode = h(
       }, [
         h('span.navbar-toggler-icon')
       ]),
-      h(`div#${id}.collapse.navbar-collapse`, [navbar_content])
+      h(`div#${id}.collapse.navbar-collapse`, navbar_content)
     ])
   ]);
 }
 
-export function App(navbar: VNode = Navbar()): VNode {
+export function App(navbar: VNode = Navbar(), content: VNode = h('!')): VNode {
   return h('div', [
-    navbar
+    navbar,
+    content
   ]);
 }
