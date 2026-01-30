@@ -6,9 +6,7 @@ export function ListGroupItem(content: VNodeChildren, onClick?: () => void, acti
       type: 'button',
       disabled: disabled
     },
-    attrs: {
-      'aria-current': active ? 'true' : 'false'
-    },
+    attrs: { 'aria-current': active ? 'true' : 'false' },
     on: { click: onClick || (() => { }) }
   }, content);
 }
@@ -24,9 +22,7 @@ export function ListGroupCheckbox(text: string, checked: boolean = false, onTogg
         disabled: disabled,
         value: ''
       },
-      on: {
-        change: (event: Event) => onToggle && onToggle((event.target as HTMLInputElement).checked)
-      }
+      on: { change: (event: Event) => onToggle && onToggle((event.target as HTMLInputElement).checked) }
     }),
     text
   ]);

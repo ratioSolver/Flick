@@ -1,40 +1,50 @@
+import { Offcanvas } from 'bootstrap';
 import { h, VNode, VNodeChildren } from 'snabbdom';
 
-export function Brand(name: string, href?: string): VNode {
-  return h('a.navbar-brand', href ? { props: { href } } : {}, name);
+export function Brand(content: VNodeChildren, onClick?: () => void): VNode {
+  return h('a.navbar-brand',
+    {
+      style: { cursor: onClick ? 'pointer' : 'default' },
+      on: { click: onClick || (() => { }) }
+    }, content);
 }
 
-export function OffcanvasBrand(name: string, id: string = 'offcanvasNavbar'): VNode {
+export function OffcanvasBrand(content: VNodeChildren, id: string = 'offcanvasNavbar'): VNode {
   return h('a.navbar-brand', {
-    props: {
-      href: `#${id}`
-    },
-    attrs: {
-      'data-bs-toggle': 'offcanvas',
-      'aria-controls': id
+    style: { cursor: 'pointer' },
+    attrs: { 'aria-controls': id },
+    on: {
+      click: () => {
+        const el = document.getElementById(id);
+        if (el)
+          Offcanvas.getOrCreateInstance(el).show();
+      }
     }
-  }, name);
+  }, content);
 }
 
-export function IconBrand(icon: string, width: number = 30, height: number = 30, name?: string, href: string = '#'): VNode {
-  return h('a.navbar-brand', { props: { href } }, [
+export function IconBrand(icon: string, width: number = 30, height: number = 30, name?: string, onClick?: () => void): VNode {
+  return h('a.navbar-brand', [
     h('img', {
+      style: { cursor: onClick ? 'pointer' : 'default' },
       props: {
         src: icon,
         width: width,
         height: height,
         alt: name || 'Brand Icon'
-      }
+      },
+      on: { click: onClick || (() => { }) }
     }),
     name ? ` ${name}` : ''
   ]);
 }
 
-export function NavbarItem(text: string, href: string, active: boolean = false): VNode {
-  return h('li.nav-item', [
+export function NavbarItem(text: string, onClick?: () => void, active: boolean = false): VNode {
+  return h('li.nav-item',
+    { style: { cursor: 'pointer' } }, [
     h('a.nav-link', {
       class: { active },
-      props: { href }
+      on: { click: onClick || (() => { }) }
     }, text)
   ]);
 }

@@ -1,4 +1,5 @@
 import { h, VNode, VNodeChildren } from 'snabbdom';
+import { Offcanvas as BootstrapOffcanvas } from 'bootstrap';
 
 export function OffcanvasHeader(title: string, id: string = 'offcanvasNavbar'): VNode {
   return h('div.offcanvas-header', [
@@ -18,11 +19,12 @@ export function OffcanvasBody(content: VNodeChildren): VNode {
 
 export function Offcanvas(body: VNode, header?: VNode, id: string = 'offcanvasNavbar'): VNode {
   return h(`div#${id}.offcanvas.offcanvas-start`, {
-    props: {
-      tabindex: -1
-    },
-    attrs: {
-      'aria-labelledby': `${id}Label`
+    key: id,
+    props: { tabindex: -1 },
+    attrs: { 'aria-labelledby': `${id}Label` },
+    hook: {
+      insert: (vnode) => BootstrapOffcanvas.getOrCreateInstance(vnode.elm as HTMLElement),
+      destroy: (vnode) => BootstrapOffcanvas.getInstance(vnode.elm as HTMLElement)?.hide()
     }
   }, [header, body]);
 }

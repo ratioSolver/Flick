@@ -2,6 +2,13 @@ import { h } from 'snabbdom';
 import { App, Navbar, NavbarItem, NavbarList, OffcanvasBrand } from '../src/components/app';
 import { Button, flick, ListGroup, ListGroupCheckbox, ListGroupItem, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Table, Toast, ToastContainer } from '../src/index';
 
+enum Tabs {
+  Home,
+  About,
+  Contact
+}
+let currentTab: Tabs = Tabs.Home;
+
 enum Pages {
   Dashboard,
   Settings,
@@ -20,9 +27,18 @@ let current_row: number | null = null;
 
 flick.mount(() => {
   const navbar = Navbar(OffcanvasBrand('Flick'), NavbarList([
-    NavbarItem('Home', '#home', true),
-    NavbarItem('About', '#about'),
-    NavbarItem('Contact', '#contact')
+    NavbarItem('Home', () => {
+      currentTab = Tabs.Home;
+      flick.redraw();
+    }, currentTab === Tabs.Home),
+    NavbarItem('About', () => {
+      currentTab = Tabs.About;
+      flick.redraw();
+    }, currentTab === Tabs.About),
+    NavbarItem('Contact', () => {
+      currentTab = Tabs.Contact;
+      flick.redraw();
+    }, currentTab === Tabs.Contact)
   ]));
 
   const offcanvas_content = ListGroup([

@@ -6,8 +6,8 @@ export function Header(cells: VNodeChildren[]): VNode {
 
 export function Row(cells: VNodeChildren[], onClick?: () => void, active: boolean = false): VNode {
   return h('tr' + (active ? '.table-active' : ''), {
-    on: { click: onClick || (() => { }) },
-    style: { cursor: onClick ? 'pointer' : 'default' }
+    style: { cursor: onClick ? 'pointer' : 'default' },
+    on: { click: onClick || (() => { }) }
   }, cells.map(cell => h('td', cell)));
 }
 
