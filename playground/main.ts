@@ -7,7 +7,6 @@ enum Tabs {
   About,
   Contact
 }
-let currentTab: Tabs = Tabs.Home;
 
 enum Pages {
   Dashboard,
@@ -15,7 +14,6 @@ enum Pages {
   Profile,
   Help
 }
-let currentPage: Pages = Pages.Dashboard;
 
 const table_headers = ['ID', 'Name', 'Role'];
 const table = [
@@ -23,41 +21,40 @@ const table = [
   { id: 2, name: 'Bob', role: 'User' },
   { id: 3, name: 'Charlie', role: 'Moderator' }
 ]
-let current_row: number | null = null;
 
 flick.mount(() => {
   const navbar = Navbar(OffcanvasBrand('Flick'), NavbarList([
     NavbarItem('Home', () => {
-      currentTab = Tabs.Home;
+      flick.ctx.currentTab = Tabs.Home;
       flick.redraw();
-    }, currentTab === Tabs.Home),
+    }, flick.ctx.currentTab === Tabs.Home),
     NavbarItem('About', () => {
-      currentTab = Tabs.About;
+      flick.ctx.currentTab = Tabs.About;
       flick.redraw();
-    }, currentTab === Tabs.About),
+    }, flick.ctx.currentTab === Tabs.About),
     NavbarItem('Contact', () => {
-      currentTab = Tabs.Contact;
+      flick.ctx.currentTab = Tabs.Contact;
       flick.redraw();
-    }, currentTab === Tabs.Contact)
+    }, flick.ctx.currentTab === Tabs.Contact)
   ]));
 
   const offcanvas_content = ListGroup([
     ListGroupItem('Dashboard', () => {
-      currentPage = Pages.Dashboard;
+      flick.ctx.currentPage = Pages.Dashboard;
       flick.redraw();
-    }, currentPage === Pages.Dashboard),
+    }, flick.ctx.currentPage === Pages.Dashboard),
     ListGroupItem('Settings', () => {
-      currentPage = Pages.Settings;
+      flick.ctx.currentPage = Pages.Settings;
       flick.redraw();
-    }, currentPage === Pages.Settings),
+    }, flick.ctx.currentPage === Pages.Settings),
     ListGroupItem('Profile', () => {
-      currentPage = Pages.Profile;
+      flick.ctx.currentPage = Pages.Profile;
       flick.redraw();
-    }, currentPage === Pages.Profile),
+    }, flick.ctx.currentPage === Pages.Profile),
     ListGroupItem('Help', () => {
-      currentPage = Pages.Help;
+      flick.ctx.currentPage = Pages.Help;
       flick.redraw();
-    }, currentPage === Pages.Help),
+    }, flick.ctx.currentPage === Pages.Help),
     ListGroupCheckbox('Enable Notifications', false, (checked) => {
       console.log('Notifications toggled:', checked);
     }),
@@ -72,9 +69,9 @@ flick.mount(() => {
     Button('Click Me', () => console.log('Button clicked!')),
     Table(table_headers, table.map(item => Row([item.id.toString(), item.name, item.role], () => {
       console.log('Row clicked:', item);
-      current_row = item.id;
+      flick.ctx.currentRow = item.id;
       flick.redraw();
-    }, current_row === item.id))),
+    }, flick.ctx.currentRow === item.id))),
     Offcanvas(
       OffcanvasBody(offcanvas_content),
       OffcanvasHeader('Flick Offcanvas')

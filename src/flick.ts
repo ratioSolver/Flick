@@ -8,6 +8,7 @@ export type Component = () => VNode;
 class Flick {
     private old_node: VNode | Element | null = null;
     private root: Component | null = null;
+    public ctx: Record<string | symbol, unknown> = {};
 
     public mount(root: Component = () => App(), container_id: string = 'app') {
         this.old_node = document.getElementById(container_id)!;
