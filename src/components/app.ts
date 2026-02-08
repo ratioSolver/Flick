@@ -77,7 +77,7 @@ export function Navbar(brand: VNodeChildren = Brand('Flick'), navbar_content?: V
 }
 
 export function App(navbar: VNodeChildren = Navbar(), content?: VNodeChildren): VNode {
-  return h('div', [
+  return h('div.min-vh-100.d-flex.flex-column', [
     navbar,
     content
   ]);
