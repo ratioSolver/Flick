@@ -1,6 +1,6 @@
 import { h } from 'snabbdom';
 import { App, Navbar, NavbarItem, NavbarList, OffcanvasBrand } from '../src/components/app';
-import { Button, flick, ListGroup, ListGroupCheckbox, ListGroupItem, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Table, Toast, ToastContainer } from '../src/index';
+import { Button, flick, Header, ListGroup, ListGroupCheckbox, ListGroupItem, Offcanvas, OffcanvasBody, OffcanvasHeader, Row, Table, Toast, ToastContainer } from '../src/index';
 
 enum Tabs {
   Home,
@@ -67,7 +67,7 @@ flick.mount(() => {
     h('h1', 'Welcome to Flick!'),
     h('p', 'This is a sample application using the Flick framework with Snabbdom and Bootstrap.'),
     Button('Click Me', () => console.log('Button clicked!')),
-    Table(table_headers, table.map(item => Row([item.id.toString(), item.name, item.role], () => {
+    Table(Header(table_headers), table.map(item => Row([item.id.toString(), item.name, item.role], () => {
       console.log('Row clicked:', item);
       flick.ctx.currentRow = item.id;
       flick.redraw();
