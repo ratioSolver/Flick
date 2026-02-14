@@ -11,8 +11,9 @@ export function Row(cells: VNodeChildren[], onClick?: () => void, active: boolea
   }, cells.map(cell => h('td', cell)));
 }
 
-export function Table(header: VNode, rows: VNode[]): VNode {
-  return h('table.table.table-striped.table-hover', [
+export function Table(header: VNode, rows: VNode[], caption?: string): VNode {
+  return h('table.table.caption-top.table-striped.table-hover', [
+    caption ? h('caption', caption) : null,
     h('thead', header),
     h('tbody', rows)
   ]);
