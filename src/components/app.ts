@@ -39,13 +39,13 @@ export function IconBrand(icon: string, width: number = 30, height: number = 30,
   ]);
 }
 
-export function NavbarItem(text: string, onClick?: () => void, active: boolean = false): VNode {
+export function NavbarItem(content: VNodeChildren, onClick?: () => void, active: boolean = false): VNode {
   return h('li.nav-item',
     { style: { cursor: 'pointer' } }, [
     h('a.nav-link', {
       class: { active },
       on: { click: onClick || (() => { }) }
-    }, text)
+    }, content)
   ]);
 }
 
