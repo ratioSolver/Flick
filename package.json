@@ -1,6 +1,6 @@
 {
   "name": "@ratiosolver/flick",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "type": "module",
   "description": "A tiny and focused UI framework designed for clarity and speed",
   "main": "dist/index.js",
@@ -31,9 +31,9 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^5.2.10",
-    "jsdom": "^27.4.0",
-    "typescript": "^5.8.3",
-    "vite": "^7.3.1"
+    "jsdom": "^29.1.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10"
   },
   "peerDependencies": {
     "bootstrap": "^5.3.8",
